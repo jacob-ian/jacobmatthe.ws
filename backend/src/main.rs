@@ -1,12 +1,8 @@
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{web, App, HttpServer};
 use backend::config::Config;
 use backend::db;
 use backend::handlers;
 use std::{env, process};
-
-async fn hello_world() -> impl Responder {
-    return HttpResponse::Ok().body("Hello world");
-}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -29,7 +25,7 @@ async fn main() -> std::io::Result<()> {
     let server = HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(pool.clone()))
-            .route("/", web::get().to(hello_world))
+            .route("/", web::get().to(handlers::health_check))
             .service(web::scope("/auth").configure(handlers::auth::config))
             .service(web::scope("/posts").configure(handlers::posts::config))
             .service(web::scope("/drafts").configure(handlers::drafts::config))
