@@ -32,6 +32,7 @@ async fn main() -> std::io::Result<()> {
             .route("/", web::get().to(hello_world))
             .service(web::scope("/auth").configure(handlers::auth::config))
             .service(web::scope("/posts").configure(handlers::posts::config))
+            .service(web::scope("/drafts").configure(handlers::drafts::config))
     })
     .bind((config.host.clone(), config.port.clone()))?
     .run();
