@@ -37,7 +37,8 @@ async fn main() -> std::io::Result<()> {
     .bind((config.host.clone(), config.port.clone()))?
     .run();
 
-    println!("Listening on {}:{}", &config.host, &config.port);
+    println!("-------\nSuccessfully started jacobmatthe.ws/api!\n-------");
+    println!("Server is listening on {}:{}", &config.host, &config.port);
 
     return server.await;
 }
