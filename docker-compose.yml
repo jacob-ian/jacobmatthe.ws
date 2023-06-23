@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend: 
+    build: 
+      context: .
+      dockerfile: backend/Dockerfile
+      target: dev
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3000
+      - DATABASE_URL=postgres://backend:password@db:5432/backend
+      - ENVIRONMENT=development
+    ports:
+      - 3000:3000
+    volumes:
+      - ./backend:/src/backend
+    depends_on:
+      - db
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=backend
+      - POSTGRES_DATABASE=backend
+      - POSTGRES_PASSWORD=password
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
