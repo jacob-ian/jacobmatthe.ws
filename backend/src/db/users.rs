@@ -1,10 +1,11 @@
 use crate::errors;
 use chrono::{DateTime, Utc};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use sqlx;
 use sqlx::PgPool;
+use uuid::Uuid;
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct User {
     pub id: uuid::Uuid,
     pub first_name: String,
@@ -90,6 +91,20 @@ pub async fn get_user_by_email(pool: &PgPool, email: String) -> Result<User, err
             WHERE email = $1;
         ",
         email
+    )
+    .fetch_one(pool)
+    .await
+    .map_err(|err| errors::Error::from_sqlx(err, "User"))
+}
+
+pub async fn get_user_by_id(pool: &PgPool, id: Uuid) -> Result<User, errors::Error> {
+    sqlx::query_as!(
+        User,
+        "
+            SELECT * FROM \"user\"
+            WHERE id= $1;
+        ",
+        id
     )
     .fetch_one(pool)
     .await
