@@ -18,6 +18,8 @@ pub enum Error {
     NotFoundError(String),
     UnauthorizedError(String),
     ForbiddenError(String),
+    InternalServerError(String),
+    BadRequestError(String),
 }
 
 impl Error {
@@ -45,6 +47,8 @@ impl Display for Error {
             Self::NotFoundError(val) => write!(f, "{}", val),
             Self::UnauthorizedError(val) => write!(f, "{}", val),
             Self::ForbiddenError(val) => write!(f, "{}", val),
+            Self::InternalServerError(val) => write!(f, "{}", val),
+            Self::BadRequestError(val) => write!(f, "{}", val),
         }
     }
 }
@@ -55,6 +59,7 @@ impl ResponseError for Error {
             Self::NotFoundError(_) => actix_web::http::StatusCode::NOT_FOUND,
             Self::ForbiddenError(_) => actix_web::http::StatusCode::FORBIDDEN,
             Self::UnauthorizedError(_) => actix_web::http::StatusCode::UNAUTHORIZED,
+            Self::BadRequestError(_) => actix_web::http::StatusCode::BAD_REQUEST,
             _ => actix_web::http::StatusCode::INTERNAL_SERVER_ERROR,
         }
     }

@@ -10,6 +10,7 @@ services:
       - HOST=0.0.0.0
       - PORT=3000
       - DATABASE_URL=postgres://backend:password@db:5432/backend
+      - REDIS_URL=http://redis:6379
       - ENVIRONMENT=development
     ports:
       - 3000:3000
@@ -17,6 +18,7 @@ services:
       - ./backend:/src/backend
     depends_on:
       - db
+      - redis
   db:
     image: postgres:15
     environment:
@@ -27,3 +29,7 @@ services:
       - 5432:5432
     volumes:
       - ./db/data:/var/lib/postgresql/data
+  redis:
+    image: redis:7-alpine
+    ports:
+      - 6379:6379

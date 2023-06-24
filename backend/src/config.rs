@@ -2,6 +2,7 @@ use std::{collections::HashMap, env, str::FromStr};
 
 use crate::errors;
 
+#[derive(Clone)]
 pub enum Environment {
     DEVELOPMENT,
     PRODUCTION,
@@ -22,7 +23,9 @@ pub struct Config {
     pub host: String,
     pub port: u16,
     pub database_url: String,
+    pub redis_url: String,
     pub environment: Environment,
+    pub session_key: String,
 }
 
 impl Config {
@@ -43,10 +46,18 @@ impl Config {
                 .get("DATABASE_URL")
                 .ok_or(errors::Error::MissingEnv(format!("DATABASE_URL")))?
                 .to_string(),
+            redis_url: map
+                .get("REDIS_URL")
+                .ok_or(errors::Error::MissingEnv(format!("REDIS_URL")))?
+                .to_string(),
             environment: map
                 .get("ENVIRONMENT")
                 .unwrap_or(&String::from("production"))
                 .parse()?,
+            session_key: map
+                .get("SESSION_KEY")
+                .ok_or(errors::Error::MissingEnv(format!("SESSION_KEY")))?
+                .to_string(),
         });
     }
 }
