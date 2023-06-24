@@ -1,5 +1,5 @@
 use actix_session;
-use actix_session::config::{PersistentSession, TtlExtensionPolicy};
+use actix_session::config::PersistentSession;
 use actix_session::storage::CookieSessionStore;
 use actix_session::SessionMiddleware;
 use actix_web::cookie::time::Duration;
@@ -32,13 +32,16 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(web::Data::new(pool.clone()))
             .wrap(
-                SessionMiddleware::builder(CookieSessionStore::default(), Key::generate())
-                    .cookie_name(String::from("sid"))
-                    .cookie_same_site(SameSite::Strict)
-                    .cookie_http_only(true)
-                    .cookie_secure(false)
-                    .session_lifecycle(PersistentSession::default().session_ttl(Duration::days(7)))
-                    .build(),
+                SessionMiddleware::builder(
+                    CookieSessionStore::default(),
+                    Key::from(config.session_key.as_bytes()),
+                )
+                .cookie_name(String::from("sid"))
+                .cookie_same_site(SameSite::Strict)
+                .cookie_http_only(true)
+                .cookie_secure(false)
+                .session_lifecycle(PersistentSession::default().session_ttl(Duration::days(7)))
+                .build(),
             )
             .route("/", web::get().to(handlers::health_check))
             .service(web::scope("/auth").configure(handlers::auth::config))
