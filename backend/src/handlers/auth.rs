@@ -4,10 +4,7 @@ use serde::Deserialize;
 use sqlx::PgPool;
 use uuid::Uuid;
 
-use crate::{
-    db::{self},
-    errors,
-};
+use crate::{db, errors};
 
 #[derive(Deserialize)]
 struct SignInBody {
@@ -43,11 +40,7 @@ async fn sign_out(session: Session) -> Result<HttpResponse, errors::Error> {
 
 /// Gets the currently signed in user or returns 401
 async fn me(session: Session, pool: web::Data<PgPool>) -> Result<HttpResponse, errors::Error> {
-    let opt = session
-        .get::<Uuid>("user_id")
-        .map_err(|e| errors::Error::InternalServerError(e.to_string()))?;
-
-    let user_id = if let Some(id) = opt {
+    let user_id = if let Some(id) = session.get::<Uuid>("user_id") {
         Ok(id)
     } else {
         Err(errors::Error::UnauthorizedError(format!("Not signed in")))
