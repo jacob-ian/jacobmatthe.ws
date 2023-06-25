@@ -5,7 +5,7 @@ use actix_session::SessionMiddleware;
 use actix_web::cookie::time::Duration;
 use actix_web::cookie::{Key, SameSite};
 use actix_web::{web, App, HttpServer};
-use backend::config::Config;
+use backend::config::{Config, Environment};
 use backend::db;
 use backend::handlers;
 use std::{env, process};
@@ -39,7 +39,10 @@ async fn main() -> std::io::Result<()> {
                 .cookie_name(String::from("sid"))
                 .cookie_same_site(SameSite::Strict)
                 .cookie_http_only(true)
-                .cookie_secure(false)
+                .cookie_secure(match config.environment {
+                    Environment::DEVELOPMENT => false,
+                    _ => true,
+                })
                 .session_lifecycle(PersistentSession::default().session_ttl(Duration::days(7)))
                 .build(),
             )
