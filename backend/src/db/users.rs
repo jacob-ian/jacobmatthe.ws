@@ -29,12 +29,12 @@ pub struct NewUserWithPassword {
     pub biography: Option<String>,
 }
 
+#[derive(Deserialize)]
 pub struct UserUpdate {
     pub first_name: String,
     pub last_name: String,
-    pub email_verified: bool,
     pub photo_url: Option<String>,
-    pub biography: String,
+    pub biography: Option<String>,
 }
 
 pub async fn create_user_with_password(
@@ -74,15 +74,13 @@ pub async fn update_user(
                 first_name = $1,
                 last_name = $2,
                 photo_url = $3,
-                email_verified = $4,
-                biography = $5
-            WHERE id = $6
+                biography = $4
+            WHERE id = $5
             RETURNING *;
         ",
         update.first_name,
         update.last_name,
         update.photo_url,
-        update.email_verified,
         update.biography,
         user_id
     )
