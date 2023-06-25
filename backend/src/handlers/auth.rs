@@ -128,6 +128,8 @@ async fn register_user(
         },
     )
     .await?;
+
+    session.insert("user_id", user.id).unwrap_or(());
     Ok(HttpResponse::Created().json(user))
 }
 
