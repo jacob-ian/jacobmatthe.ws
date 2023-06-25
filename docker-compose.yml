@@ -18,7 +18,6 @@ services:
       - ./backend:/src/backend
     depends_on:
       - db
-      - redis
   db:
     image: postgres:15
     environment:
