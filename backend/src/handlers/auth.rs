@@ -1,7 +1,7 @@
 use actix_session::Session;
 use actix_web::{web, HttpResponse};
 use argon2::Argon2;
-use crypto::password_hash::{Encoding, PasswordHash, PasswordVerifier};
+use crypto::password_hash::PasswordHash;
 use serde::Deserialize;
 use sqlx::PgPool;
 use uuid::Uuid;
@@ -15,6 +15,16 @@ use crate::{
 struct SignInBody {
     email: String,
     password: String,
+}
+
+#[derive(Deserialize)]
+struct RegisterBody {
+    email: String,
+    password: String,
+    first_name: String,
+    last_name: String,
+    photo_url: Option<String>,
+    biography: Option<String>,
 }
 
 /// Starts a new session for a user with provided credentials
@@ -86,7 +96,31 @@ async fn me(session: Session, pool: web::Data<PgPool>) -> Result<HttpResponse, e
     Ok(HttpResponse::Ok().json(user))
 }
 
+/// Registers a user
+async fn register_user(
+    session: Session,
+    pool: web::Data<PgPool>,
+    body: web::Json<RegisterBody>,
+) -> Result<HttpResponse, errors::Error> {
+    if let Ok(Some(_)) = session.get::<uuid::Uuid>("user_id") {
+        return Err(Error::BadRequestError(format!("Already signed in")));
+    }
+    let new_user = body.into_inner();
+    if let Ok(_) = db::users::get_user_by_email(&pool, new_user.email.clone()).await {
+        return Err(Error::BadRequestError(format!(
+            "User with this email already exists"
+        )));
+    }
+    if new_user.password.len() < 12 {
+        return Err(Error::BadRequestError(format!(
+            "Password must have at least 12 characters"
+        )));
+    }
+    Ok(HttpResponse::Created().into())
+}
+
 pub fn config(cfg: &mut web::ServiceConfig) {
+    cfg.service(web::resource("/register").route(web::post().to(register_user)));
     cfg.service(web::resource("/signIn").route(web::post().to(sign_in)));
     cfg.service(web::resource("/signOut").route(web::post().to(sign_out)));
     cfg.service(web::resource("/me").route(web::get().to(me)));

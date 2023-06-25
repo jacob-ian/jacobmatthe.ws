@@ -5,6 +5,8 @@ use sqlx;
 use sqlx::PgPool;
 use uuid::Uuid;
 
+use super::user_credentials;
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct User {
     pub id: uuid::Uuid,
@@ -18,10 +20,11 @@ pub struct User {
     pub updated_at: DateTime<Utc>,
 }
 
-pub struct NewUser {
+pub struct NewUserWithPassword {
     pub first_name: String,
     pub last_name: String,
     pub email: String,
+    pub password: String,
     pub photo_url: Option<String>,
     pub biography: Option<String>,
 }
@@ -34,8 +37,11 @@ pub struct UserUpdate {
     pub biography: String,
 }
 
-pub async fn insert_user(pool: &PgPool, new_user: NewUser) -> Result<User, errors::Error> {
-    sqlx::query_as!(
+pub async fn create_user_with_password(
+    pool: &PgPool,
+    new_user: NewUserWithPassword,
+) -> Result<User, errors::Error> {
+    let user = sqlx::query_as!(
         User,
         "
              INSERT INTO \"user\" (first_name, last_name, email, photo_url)
@@ -49,7 +55,9 @@ pub async fn insert_user(pool: &PgPool, new_user: NewUser) -> Result<User, error
     )
     .fetch_one(pool)
     .await
-    .map_err(|err| errors::Error::DatabaseError(err.to_string()))
+    .map_err(|err| errors::Error::DatabaseError(err.to_string()))?;
+    user_credentials::create_user_credential(pool, user.id, new_user.password).await?;
+    Ok(user)
 }
 
 pub async fn update_user(
