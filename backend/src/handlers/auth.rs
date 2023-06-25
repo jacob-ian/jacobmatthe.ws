@@ -7,7 +7,7 @@ use sqlx::PgPool;
 use uuid::Uuid;
 
 use crate::{
-    db,
+    db::{self, users::NewUserWithPassword},
     errors::{self, Error},
 };
 
@@ -116,7 +116,19 @@ async fn register_user(
             "Password must have at least 12 characters"
         )));
     }
-    Ok(HttpResponse::Created().into())
+    let user = db::users::create_user_with_password(
+        &pool,
+        NewUserWithPassword {
+            email: new_user.email,
+            password: new_user.password,
+            first_name: new_user.first_name,
+            last_name: new_user.last_name,
+            biography: new_user.biography,
+            photo_url: new_user.photo_url,
+        },
+    )
+    .await?;
+    Ok(HttpResponse::Created().json(user))
 }
 
 pub fn config(cfg: &mut web::ServiceConfig) {
