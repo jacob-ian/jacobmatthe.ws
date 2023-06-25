@@ -3,6 +3,7 @@ use sqlx::{migrate, postgres::PgPoolOptions, Pool, Postgres};
 use crate::config::{self, Config};
 
 pub mod posts;
+pub mod user_credentials;
 pub mod users;
 
 /// Creates the database pool from config and runs migrations
