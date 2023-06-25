@@ -45,6 +45,7 @@ async fn main() -> std::io::Result<()> {
             )
             .route("/", web::get().to(handlers::health_check))
             .service(web::scope("/auth").configure(handlers::auth::config))
+            .service(web::scope("/users").configure(handlers::users::config))
             .service(web::scope("/posts").configure(handlers::posts::config))
             .service(web::scope("/drafts").configure(handlers::drafts::config))
     })
