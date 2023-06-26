@@ -4,6 +4,7 @@ use uuid::Uuid;
 
 use crate::errors::Error;
 
+#[allow(dead_code)]
 pub struct EmailVerification {
     id: Uuid,
     user_id: Uuid,
