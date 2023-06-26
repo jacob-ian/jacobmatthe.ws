@@ -5,7 +5,7 @@ use sqlx::PgPool;
 use uuid::Uuid;
 
 use crate::{
-    auth::{self, passwords},
+    auth::passwords,
     db::{self, users::NewUser},
     errors::{self, Error},
 };
@@ -38,8 +38,7 @@ async fn sign_in(
 
     let credentials = body.into_inner();
     let user =
-        auth::passwords::verify_password_by_email(&pool, credentials.email, credentials.password)
-            .await?;
+        passwords::verify_password_by_email(&pool, credentials.email, credentials.password).await?;
 
     session
         .insert("user_id", user.id.clone())

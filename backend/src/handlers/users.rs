@@ -1,13 +1,13 @@
 use actix_session::Session;
 use actix_web::{web, HttpResponse};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 use uuid::Uuid;
-use 
 
 use crate::{
+    auth::passwords::{self, verify_password},
     db::{self, users::UserUpdate},
-    errors::Error, auth::passwords::{verify_password, self},
+    errors::Error,
 };
 
 async fn update_user(
@@ -39,6 +39,11 @@ struct ChangePasswordBody {
     new_password: String,
 }
 
+#[derive(Serialize)]
+struct ChangePasswordResponse {
+    message: String,
+}
+
 async fn change_password(
     session: Session,
     pool: web::Data<PgPool>,
@@ -59,7 +64,10 @@ async fn change_password(
     }
 
     passwords::verify_password(&pool, user_id, payload.old_password).await?;
-    passwords::change_password(&pool, user_id, payload.new_password).await?;
+    passwords::set_password(&pool, user_id, payload.new_password).await?;
+    Ok(HttpResponse::Ok().json(ChangePasswordResponse {
+        message: format!("Password changed"),
+    }))
 }
 
 pub fn config(cfg: &mut web::ServiceConfig) {
