@@ -63,6 +63,12 @@ async fn change_password(
         return Err(Error::ForbiddenError(format!("Forbidden")));
     }
 
+    if payload.new_password.len() < 12 {
+        return Err(Error::BadRequestError(format!(
+            "Password must have at least 12 characters"
+        )));
+    }
+
     passwords::verify_password(&pool, user_id, payload.old_password).await?;
     passwords::set_password(&pool, user_id, payload.new_password).await?;
 
