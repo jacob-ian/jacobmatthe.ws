@@ -10,6 +10,17 @@ use crate::{
     errors::Error,
 };
 
+#[derive(Deserialize)]
+struct ChangePasswordBody {
+    old_password: String,
+    new_password: String,
+}
+
+#[derive(Serialize)]
+struct ChangePasswordResponse {
+    message: String,
+}
+
 async fn update_user(
     session: Session,
     pool: web::Data<PgPool>,
@@ -31,17 +42,6 @@ async fn update_user(
 
     let user = db::users::update_user(&pool, user_id, update).await?;
     Ok(HttpResponse::Ok().json(user))
-}
-
-#[derive(Deserialize)]
-struct ChangePasswordBody {
-    old_password: String,
-    new_password: String,
-}
-
-#[derive(Serialize)]
-struct ChangePasswordResponse {
-    message: String,
 }
 
 async fn change_password(
