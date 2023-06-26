@@ -5,7 +5,8 @@ use sqlx::PgPool;
 use uuid::Uuid;
 
 use crate::{
-    auth::passwords,
+    auth::{passwords, verification},
+    config::Config,
     db::{self, users::NewUser},
     errors::{self, Error},
 };
@@ -76,6 +77,7 @@ async fn me(session: Session, pool: web::Data<PgPool>) -> Result<HttpResponse, e
 async fn register_user(
     session: Session,
     pool: web::Data<PgPool>,
+    config: web::Data<Config>,
     body: web::Json<RegisterBody>,
 ) -> Result<HttpResponse, errors::Error> {
     if let Ok(Some(_)) = session.get::<uuid::Uuid>("user_id") {
@@ -107,6 +109,7 @@ async fn register_user(
     .await?;
 
     passwords::set_password(&pool, user.id, new_user.password).await?;
+    verification::send_verification_email(&config, &pool, user.id).await?;
 
     session.insert("user_id", user.id).unwrap_or(());
     Ok(HttpResponse::Created().json(user))

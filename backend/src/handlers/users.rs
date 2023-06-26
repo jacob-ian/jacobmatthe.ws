@@ -5,7 +5,8 @@ use sqlx::PgPool;
 use uuid::Uuid;
 
 use crate::{
-    auth::passwords,
+    auth::{passwords, verification},
+    config::Config,
     db::{self, users::UserUpdate},
     errors::Error,
 };
@@ -28,6 +29,11 @@ struct VerifyEmailBody {
 
 #[derive(Serialize)]
 struct VerifyEmailResponse {
+    message: String,
+}
+
+#[derive(Serialize)]
+struct ResendVerificationResponse {
     message: String,
 }
 
@@ -106,15 +112,34 @@ async fn verify_email_code(
         return Err(Error::ForbiddenError(format!("Forbidden")));
     }
 
-    let verification =
-        db::email_verifications::get_verification_by_code(&pool, user_id, payload.code).await;
+    verification::verify_email_by_code(&pool, user_id, payload.code).await?;
 
-    if !verification.is_ok() {
-        return Err(Error::BadRequestError(format!("Invalid code")));
-    }
-    db::users::set_email_verified(&pool, user_id).await?;
     Ok(HttpResponse::Ok().json(VerifyEmailResponse {
         message: format!("Email verified"),
+    }))
+}
+
+async fn resend_verification_email(
+    session: Session,
+    config: web::Data<Config>,
+    pool: web::Data<PgPool>,
+    path: web::Path<Uuid>,
+) -> Result<HttpResponse, Error> {
+    let signed_in_user = if let Ok(Some(id)) = session.get::<Uuid>("user_id") {
+        id
+    } else {
+        return Err(Error::UnauthorizedError(format!("Not signed in")));
+    };
+
+    let user_id = path.into_inner();
+    if signed_in_user != user_id {
+        return Err(Error::ForbiddenError(format!("Forbidden")));
+    }
+
+    verification::send_verification_email(&config, &pool, user_id).await?;
+
+    Ok(HttpResponse::Ok().json(ResendVerificationResponse {
+        message: format!("Verification email sent"),
     }))
 }
 
@@ -122,4 +147,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(web::resource("/{user_id}").route(web::put().to(update_user)));
     cfg.service(web::resource("/{user_id}/password").route(web::put().to(change_password)));
     cfg.service(web::resource("/{user_id}/verify").route(web::post().to(verify_email_code)));
+    cfg.service(
+        web::resource("/{user_id}/verify/resend").route(web::post().to(resend_verification_email)),
+    );
 }

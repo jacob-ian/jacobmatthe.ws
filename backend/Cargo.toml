@@ -15,3 +15,5 @@ chrono = { version = "0.4", features = [ "serde"] }
 uuid = { version = "1.3", features = [ "v4", "serde" ] }
 crypto = { version = "0.5", features = [ "password-hash" ] }
 argon2 = "0.5"
+rand = { version = "0.8" }
+lettre = { version = "0.10", fetures = [ "native-tls"] }

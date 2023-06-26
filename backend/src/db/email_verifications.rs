@@ -34,3 +34,23 @@ pub async fn get_verification_by_code(
     .await
     .map_err(|e| Error::from_sqlx(e, "Email Verification"))
 }
+
+pub async fn save_verification_code(
+    pool: &PgPool,
+    user_id: Uuid,
+    code: String,
+) -> Result<EmailVerification, Error> {
+    sqlx::query_as!(
+        EmailVerification,
+        "
+            INSERT INTO \"email_verification\" (user_id, code)
+            VALUES ($1, $2)
+            RETURNING *;
+        ",
+        user_id,
+        code
+    )
+    .fetch_one(pool)
+    .await
+    .map_err(|e| Error::from_sqlx(e, "Email Verification"))
+}

@@ -19,6 +19,7 @@ impl FromStr for Environment {
     }
 }
 
+#[derive(Clone)]
 pub struct Config {
     pub host: String,
     pub port: u16,
@@ -26,6 +27,11 @@ pub struct Config {
     pub redis_url: String,
     pub environment: Environment,
     pub session_key: String,
+    pub from_email: String,
+    pub smtp_host: String,
+    pub smtp_user: String,
+    pub smtp_password: String,
+    pub external_host: String,
 }
 
 impl Config {
@@ -57,6 +63,26 @@ impl Config {
             session_key: map
                 .get("SESSION_KEY")
                 .ok_or(errors::Error::MissingEnv(format!("SESSION_KEY")))?
+                .to_string(),
+            from_email: map
+                .get("FROM_EMAIL")
+                .ok_or(errors::Error::MissingEnv(format!("FROM_EMAIL")))?
+                .to_string(),
+            smtp_host: map
+                .get("SMTP_HOST")
+                .ok_or(errors::Error::MissingEnv(format!("SMTP_HOST")))?
+                .to_string(),
+            smtp_user: map
+                .get("SMTP_USER")
+                .ok_or(errors::Error::MissingEnv(format!("SMTP_USER")))?
+                .to_string(),
+            smtp_password: map
+                .get("SMTP_PASSWORD")
+                .ok_or(errors::Error::MissingEnv(format!("SMTP_PASSWORD")))?
+                .to_string(),
+            external_host: map
+                .get("EXTERNAL_HOST")
+                .ok_or(errors::Error::MissingEnv(format!("EXTERNAL_HOST")))?
                 .to_string(),
         });
     }

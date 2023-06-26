@@ -6,8 +6,8 @@ use actix_web::cookie::time::Duration;
 use actix_web::cookie::{Key, SameSite};
 use actix_web::{web, App, HttpServer};
 use backend::config::{Config, Environment};
+use backend::db;
 use backend::handlers;
-use backend::{auth, db};
 use std::{env, process};
 
 #[actix_web::main]
@@ -28,18 +28,21 @@ async fn main() -> std::io::Result<()> {
         }
     };
 
+    let app_config = web::Data::new(config.clone());
+
     let server = HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(pool.clone()))
+            .app_data(web::Data::clone(&app_config))
             .wrap(
                 SessionMiddleware::builder(
                     CookieSessionStore::default(),
-                    Key::from(config.session_key.as_bytes()),
+                    Key::from(app_config.session_key.as_bytes()),
                 )
                 .cookie_name(String::from("sid"))
                 .cookie_same_site(SameSite::Strict)
                 .cookie_http_only(true)
-                .cookie_secure(match config.environment {
+                .cookie_secure(match app_config.environment {
                     Environment::DEVELOPMENT => false,
                     _ => true,
                 })
