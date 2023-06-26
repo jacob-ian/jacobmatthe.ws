@@ -23,7 +23,7 @@ pub async fn get_verification_by_code(
             SELECT *
             FROM \"email_verification\"
             WHERE
-                expires_at < now()
+                expires_at > now()
                 AND user_id = $1
                 AND code = $2;
         ",
