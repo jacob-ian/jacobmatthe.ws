@@ -40,6 +40,20 @@ pub async fn save_verification_code(
     user_id: Uuid,
     code: String,
 ) -> Result<EmailVerification, Error> {
+    sqlx::query!(
+        "
+            UPDATE \"email_verification\"
+            SET
+                expires_at = now()
+            WHERE
+                user_id = $1
+        ",
+        user_id
+    )
+    .execute(pool)
+    .await
+    .map_err(|_| Error::InternalServerError(format!("Failed to invalidate previous codes")))?;
+
     sqlx::query_as!(
         EmailVerification,
         "
