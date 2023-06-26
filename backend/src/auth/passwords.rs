@@ -52,13 +52,14 @@ pub async fn verify_password(pool: &PgPool, user_id: Uuid, password: String) -> 
                 Error::BadRequestError(format!("Incorrect password"))
             }
             _ => Error::InternalServerError(format!("Verification failed")),
-        })?
+        })
 }
 
 /// Sets a user's password to the one provided
 pub async fn set_password(pool: &PgPool, user_id: Uuid, password: String) -> Result<(), Error> {
     let salt = SaltString::generate(&mut OsRng);
-    let hash = PasswordHash::generate(&Argon2::default(), password, &salt)
-        .map_err(|e| Error::InternalServerError(format!("Could not change password")))?;
+    let hash = PasswordHash::generate(Argon2::default(), password, &salt)
+        .map_err(|_| Error::InternalServerError(format!("Could not change password")))?;
     db::user_credentials::upsert_user_credential(pool, user_id, hash.to_string()).await?;
+    Ok(())
 }

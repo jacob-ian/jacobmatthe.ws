@@ -5,7 +5,7 @@ use sqlx::PgPool;
 use uuid::Uuid;
 
 use crate::{
-    auth::passwords::{self, verify_password},
+    auth::passwords,
     db::{self, users::UserUpdate},
     errors::Error,
 };
@@ -65,6 +65,7 @@ async fn change_password(
 
     passwords::verify_password(&pool, user_id, payload.old_password).await?;
     passwords::set_password(&pool, user_id, payload.new_password).await?;
+
     Ok(HttpResponse::Ok().json(ChangePasswordResponse {
         message: format!("Password changed"),
     }))
