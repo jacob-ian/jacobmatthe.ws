@@ -6,8 +6,8 @@ use actix_web::cookie::time::Duration;
 use actix_web::cookie::{Key, SameSite};
 use actix_web::{web, App, HttpServer};
 use backend::config::{Config, Environment};
-use backend::db;
 use backend::handlers;
+use backend::{auth, db};
 use std::{env, process};
 
 #[actix_web::main]

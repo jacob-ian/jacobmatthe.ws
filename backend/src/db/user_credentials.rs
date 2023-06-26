@@ -32,26 +32,23 @@ pub async fn get_password_hash_by_user_id(pool: &PgPool, user_id: Uuid) -> Resul
     Ok(res.password_hash)
 }
 
-pub async fn create_user_credential(
+pub async fn upsert_user_credential(
     pool: &PgPool,
     user_id: Uuid,
-    password: String,
+    password_hash: String,
 ) -> Result<UserCredential, Error> {
-    let salt = SaltString::generate(&mut OsRng);
-    let hash = Argon2::default()
-        .hash_password(password.as_bytes(), &salt)
-        .map_err(|_| Error::InternalServerError(format!("Could not register user")))?;
-
     sqlx::query_as!(
         UserCredential,
         "
-            INSERT INTO \"user_credential\" 
-            (user_id, password_hash)
+            INSERT INTO \"user_credential\" (user_id, password_hash)
             VALUES ($1, $2)
+            ON CONFLICT (user_id)
+            DO
+                UPDATE SET password_hash = $2
             RETURNING *;
         ",
         user_id,
-        hash.to_string()
+        password_hash
     )
     .fetch_one(pool)
     .await

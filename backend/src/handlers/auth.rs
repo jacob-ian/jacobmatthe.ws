@@ -1,13 +1,12 @@
 use actix_session::Session;
 use actix_web::{web, HttpResponse};
-use argon2::Argon2;
-use crypto::password_hash::PasswordHash;
 use serde::Deserialize;
 use sqlx::PgPool;
 use uuid::Uuid;
 
 use crate::{
-    db::{self, users::NewUserWithPassword},
+    auth::{self, passwords},
+    db::{self, users::NewUser},
     errors::{self, Error},
 };
 
@@ -37,32 +36,10 @@ async fn sign_in(
         return Err(errors::Error::BadRequestError(format!("Already signed in")));
     }
 
-    let details = body.into_inner();
-
-    let user = db::users::get_user_by_email(&pool, details.email.clone())
-        .await
-        .map_err(|e| match e {
-            Error::NotFoundError(_) => Error::BadRequestError(format!("Invalid email or password")),
-            _ => Error::InternalServerError(format!("Verification failed")),
-        })?;
-
-    let hash = db::user_credentials::get_password_hash_by_user_id(&pool, user.id.clone())
-        .await
-        .map_err(|e| match e {
-            Error::NotFoundError(_) => Error::BadRequestError(format!("Invalid email or password")),
-            _ => Error::InternalServerError(format!("Verification failed")),
-        })?;
-
-    let hash = PasswordHash::new(&hash)
-        .map_err(|_| Error::InternalServerError(format!("Verification failed")))?;
-
-    hash.verify_password(&[&Argon2::default()], details.password)
-        .map_err(|e| match e {
-            argon2::password_hash::Error::Password => {
-                Error::BadRequestError(format!("Invalid email or password"))
-            }
-            _ => Error::InternalServerError(format!("Verification failed")),
-        })?;
+    let credentials = body.into_inner();
+    let user =
+        auth::passwords::verify_password_by_email(&pool, credentials.email, credentials.password)
+            .await?;
 
     session
         .insert("user_id", user.id.clone())
@@ -111,16 +88,17 @@ async fn register_user(
             "User with this email already exists"
         )));
     }
+
     if new_user.password.len() < 12 {
         return Err(Error::BadRequestError(format!(
             "Password must have at least 12 characters"
         )));
     }
-    let user = db::users::create_user_with_password(
+
+    let user = db::users::create_user(
         &pool,
-        NewUserWithPassword {
+        NewUser {
             email: new_user.email,
-            password: new_user.password,
             first_name: new_user.first_name,
             last_name: new_user.last_name,
             biography: new_user.biography,
@@ -128,6 +106,8 @@ async fn register_user(
         },
     )
     .await?;
+
+    passwords::set_password(&pool, user.id, new_user.password).await?;
 
     session.insert("user_id", user.id).unwrap_or(());
     Ok(HttpResponse::Created().json(user))

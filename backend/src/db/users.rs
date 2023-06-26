@@ -1,3 +1,4 @@
+use crate::auth::passwords;
 use crate::errors;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
@@ -20,11 +21,10 @@ pub struct User {
     pub updated_at: DateTime<Utc>,
 }
 
-pub struct NewUserWithPassword {
+pub struct NewUser {
     pub first_name: String,
     pub last_name: String,
     pub email: String,
-    pub password: String,
     pub photo_url: Option<String>,
     pub biography: Option<String>,
 }
@@ -37,11 +37,8 @@ pub struct UserUpdate {
     pub biography: Option<String>,
 }
 
-pub async fn create_user_with_password(
-    pool: &PgPool,
-    new_user: NewUserWithPassword,
-) -> Result<User, errors::Error> {
-    let user = sqlx::query_as!(
+pub async fn create_user(pool: &PgPool, new_user: NewUser) -> Result<User, errors::Error> {
+    sqlx::query_as!(
         User,
         "
              INSERT INTO \"user\" (first_name, last_name, email, photo_url)
@@ -55,9 +52,7 @@ pub async fn create_user_with_password(
     )
     .fetch_one(pool)
     .await
-    .map_err(|err| errors::Error::DatabaseError(err.to_string()))?;
-    user_credentials::create_user_credential(pool, user.id, new_user.password).await?;
-    Ok(user)
+    .map_err(|err| errors::Error::DatabaseError(err.to_string()))
 }
 
 pub async fn update_user(
