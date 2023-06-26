@@ -1,5 +1,5 @@
 use crate::auth::passwords;
-use crate::errors;
+use crate::errors::{self, Error};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx;
@@ -110,4 +110,21 @@ pub async fn get_user_by_id(pool: &PgPool, id: Uuid) -> Result<User, errors::Err
     .fetch_one(pool)
     .await
     .map_err(|err| errors::Error::from_sqlx(err, "User"))
+}
+
+pub async fn set_email_verified(pool: &PgPool, user_id: Uuid) -> Result<(), Error> {
+    sqlx::query!(
+        "
+            UPDATE \"user\"
+            SET
+                email_verified = true
+            WHERE
+                id = $1;
+        ",
+        user_id
+    )
+    .execute(pool)
+    .await
+    .map_err(|err| errors::Error::from_sqlx(err, "User"))?;
+    Ok(())
 }

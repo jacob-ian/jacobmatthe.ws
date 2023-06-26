@@ -2,6 +2,7 @@ use sqlx::{migrate, postgres::PgPoolOptions, Pool, Postgres};
 
 use crate::config::{self, Config};
 
+pub mod email_verifications;
 pub mod posts;
 pub mod user_credentials;
 pub mod users;
