@@ -19,7 +19,6 @@ pub async fn verify_email_by_code(pool: &PgPool, user_id: Uuid, code: String) ->
     }
 
     users::set_email_verified(pool, user_id).await?;
-
     Ok(())
 }
 
@@ -30,13 +29,11 @@ pub async fn send_verification_email(
 ) -> Result<(), Error> {
     let code: String = rand::thread_rng()
         .sample_iter(&Alphanumeric)
-        .take(32)
+        .take(8)
         .map(char::from)
         .collect();
 
     email_verifications::save_verification_code(pool, user_id, code.clone()).await?;
-
-    let verification_url = format!("{}/verify?code={}", config.external_host, code);
 
     let user = db::users::get_user_by_id(pool, user_id).await?;
 
@@ -54,21 +51,24 @@ pub async fn send_verification_email(
                 email_address: config.from_email.clone(),
             },
             subject: String::from("Verify Your Email | jacobmatthe.ws"),
-            text: String::from("Please verify your email by clicking the following link."),
+            text: format!(
+                "Please use the following code to verify your email: {}",
+                code
+            ),
             html: format!(
                 "
                 <html>
                     <p>Hi {},</p>
-                    <p>Please click <a href=\"{}\">here</a> or paste the following in your browser to verify your email address:</p>
+                    <p>Please copy the following code to verify your email address:</p>
+                    <br />
                     <pre>{}</pre>
+                    <br />
                     <p>Thanks,</p>
                     <p>Jacob</p>
                 </html>
                 ",
-                user.first_name,
-                verification_url,
-                verification_url
-            )
+                user.first_name, code
+            ),
         },
     )
 }
