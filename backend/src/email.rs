@@ -20,7 +20,6 @@ pub struct Email {
     pub html: String,
 }
 
-/// Sends an email
 pub fn send_email(config: &Config, email: Email) -> Result<(), Error> {
     let from = mailbox_from_address(email.sender)?;
     let to = mailbox_from_address(email.recipient)?;
