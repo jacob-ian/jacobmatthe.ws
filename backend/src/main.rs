@@ -30,15 +30,16 @@ async fn main() -> std::io::Result<()> {
     };
 
     let app_config = web::Data::new(config.clone());
+    let json_config = web::JsonConfig::default().error_handler(|err, _| {
+        let mapped = Error::from_json_payload(err);
+        error::InternalError::from_response(mapped.clone(), mapped.error_response()).into()
+    });
 
     let server = HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(pool.clone()))
             .app_data(web::Data::clone(&app_config))
-            .app_data(web::JsonConfig::default().error_handler(|err, _| {
-                let mapped = Error::from_json_payload(err);
-                error::InternalError::from_response(mapped.clone(), mapped.error_response()).into()
-            }))
+            .app_data(json_config.clone())
             .wrap(
                 SessionMiddleware::builder(
                     CookieSessionStore::default(),
