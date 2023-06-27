@@ -1,12 +1,9 @@
-use crate::auth::passwords;
 use crate::errors::{self, Error};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx;
 use sqlx::PgPool;
 use uuid::Uuid;
-
-use super::user_credentials;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct User {
