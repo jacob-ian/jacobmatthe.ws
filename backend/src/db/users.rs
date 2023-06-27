@@ -125,3 +125,19 @@ pub async fn set_email_verified(pool: &PgPool, user_id: Uuid) -> Result<(), Erro
     .map_err(|err| errors::Error::from_sqlx(err, "User"))?;
     Ok(())
 }
+
+pub async fn is_email_verified(pool: &PgPool, user_id: Uuid) -> Result<bool, Error> {
+    let user = sqlx::query!(
+        "
+            SELECT email_verified
+            FROM \"user\"
+            WHERE 
+                id = $1;
+        ",
+        user_id
+    )
+    .fetch_one(pool)
+    .await
+    .map_err(|e| Error::from_sqlx(e, "User"))?;
+    return Ok(user.email_verified);
+}
