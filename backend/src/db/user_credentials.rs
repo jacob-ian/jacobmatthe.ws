@@ -1,13 +1,10 @@
-use argon2::{
-    password_hash::{rand_core::OsRng, SaltString},
-    Argon2, PasswordHasher,
-};
 use chrono::{DateTime, Utc};
 use sqlx::{self, PgPool};
 use uuid::Uuid;
 
 use crate::errors::{self, Error};
 
+#[allow(dead_code)]
 pub struct UserCredential {
     id: Uuid,
     user_id: Uuid,

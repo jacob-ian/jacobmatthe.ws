@@ -24,7 +24,6 @@ pub struct Config {
     pub host: String,
     pub port: u16,
     pub database_url: String,
-    pub redis_url: String,
     pub environment: Environment,
     pub session_key: String,
     pub from_email: String,
@@ -51,10 +50,6 @@ impl Config {
             database_url: map
                 .get("DATABASE_URL")
                 .ok_or(errors::Error::MissingEnv(format!("DATABASE_URL")))?
-                .to_string(),
-            redis_url: map
-                .get("REDIS_URL")
-                .ok_or(errors::Error::MissingEnv(format!("REDIS_URL")))?
                 .to_string(),
             environment: map
                 .get("ENVIRONMENT")
