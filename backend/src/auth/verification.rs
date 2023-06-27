@@ -41,16 +41,14 @@ pub async fn send_verification_email(
         config,
         Email {
             recipient: Address {
-                first_name: user.first_name.clone(),
-                last_name: user.last_name,
+                name: format!("{} {}", user.first_name, user.last_name),
                 email_address: user.email,
             },
             sender: Address {
-                first_name: String::from("Jacob"),
-                last_name: String::from("Matthews"),
+                name: config.from_name.clone(),
                 email_address: config.from_email.clone(),
             },
-            subject: String::from("Verify Your Email | jacobmatthe.ws"),
+            subject: String::from("Verify Your Email"),
             text: format!(
                 "Please use the following code to verify your email: {}",
                 code
@@ -59,15 +57,16 @@ pub async fn send_verification_email(
                 "
                 <html>
                     <p>Hi {},</p>
+                    <br />
                     <p>Please copy the following code to verify your email address:</p>
                     <br />
                     <pre>{}</pre>
                     <br />
                     <p>Thanks,</p>
-                    <p>Jacob</p>
+                    <p>{}</p>
                 </html>
                 ",
-                user.first_name, code
+                user.first_name, code, config.from_name
             ),
         },
     )

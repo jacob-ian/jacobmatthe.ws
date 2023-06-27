@@ -7,8 +7,7 @@ use lettre::{
 use crate::{config::Config, errors::Error};
 
 pub struct Address {
-    pub first_name: String,
-    pub last_name: String,
+    pub name: String,
     pub email_address: String,
 }
 
@@ -37,12 +36,9 @@ pub fn send_email(config: &Config, email: Email) -> Result<(), Error> {
 }
 
 pub fn mailbox_from_address(address: Address) -> Result<Mailbox, Error> {
-    format!(
-        "{} {} <{}>",
-        address.first_name, address.last_name, address.email_address
-    )
-    .parse::<Mailbox>()
-    .map_err(|_| Error::InternalServerError(format!("Could not email user")))
+    format!("{} <{}>", address.name, address.email_address)
+        .parse::<Mailbox>()
+        .map_err(|_| Error::InternalServerError(format!("Could not email user")))
 }
 
 pub fn transport_from_config(config: &Config) -> Result<SmtpTransport, Error> {
