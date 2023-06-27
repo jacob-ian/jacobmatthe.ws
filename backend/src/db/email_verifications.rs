@@ -48,6 +48,7 @@ pub async fn save_verification_code(
                 expires_at = now()
             WHERE
                 user_id = $1
+                AND expires_at > now();
         ",
         user_id
     )
