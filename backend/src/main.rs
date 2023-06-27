@@ -4,9 +4,10 @@ use actix_session::storage::CookieSessionStore;
 use actix_session::SessionMiddleware;
 use actix_web::cookie::time::Duration;
 use actix_web::cookie::{Key, SameSite};
-use actix_web::{web, App, HttpServer};
+use actix_web::{error, web, App, HttpServer, ResponseError};
 use backend::config::{Config, Environment};
 use backend::db;
+use backend::errors::Error;
 use backend::handlers;
 use std::{env, process};
 
@@ -34,6 +35,10 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(web::Data::new(pool.clone()))
             .app_data(web::Data::clone(&app_config))
+            .app_data(web::JsonConfig::default().error_handler(|err, _| {
+                let mapped = Error::from_json_payload(err);
+                error::InternalError::from_response(mapped.clone(), mapped.error_response()).into()
+            }))
             .wrap(
                 SessionMiddleware::builder(
                     CookieSessionStore::default(),

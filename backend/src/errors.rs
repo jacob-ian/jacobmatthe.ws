@@ -1,16 +1,16 @@
 use std::fmt::Display;
 
-use actix_web::{HttpResponse, ResponseError};
+use actix_web::{error::JsonPayloadError, HttpResponse, ResponseError};
 use serde::Serialize;
 
 #[derive(Serialize)]
-struct ErrorBody {
+pub struct ErrorBody {
     status: u16,
     error: String,
     description: String,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Error {
     MissingEnv(String),
     InvalidEnv(String),
@@ -28,6 +28,10 @@ impl Error {
             sqlx::Error::RowNotFound => Self::NotFoundError(format!("{} not found", entity)),
             _ => Self::DatabaseError(err.to_string()),
         }
+    }
+
+    pub fn from_json_payload(err: JsonPayloadError) -> Self {
+        Error::BadRequestError(err.to_string())
     }
 
     pub fn error_message(&self) -> String {
