@@ -29,6 +29,7 @@ pub struct Config {
     pub from_email: String,
     pub from_name: String,
     pub smtp_host: String,
+    pub smtp_port: u16,
     pub smtp_user: String,
     pub smtp_password: String,
 }
@@ -71,6 +72,11 @@ impl Config {
                 .get("SMTP_HOST")
                 .ok_or(errors::Error::MissingEnv(format!("SMTP_HOST")))?
                 .to_string(),
+            smtp_port: map
+                .get("SMTP_PORT")
+                .ok_or(errors::Error::MissingEnv(format!("SMTP_PORT")))?
+                .parse()
+                .map_err(|_| errors::Error::InvalidEnv(format!("SMTP_PORT")))?,
             smtp_user: map
                 .get("SMTP_USER")
                 .ok_or(errors::Error::MissingEnv(format!("SMTP_USER")))?

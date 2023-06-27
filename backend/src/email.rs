@@ -44,7 +44,7 @@ pub fn mailbox_from_address(address: Address) -> Result<Mailbox, Error> {
 pub fn transport_from_config(config: &Config) -> Result<SmtpTransport, Error> {
     Ok(SmtpTransport::starttls_relay(&config.smtp_host)
         .map_err(|_| Error::InternalServerError(format!("Could not connect to email server")))?
-        .port(587)
+        .port(config.smtp_port)
         .credentials(Credentials::new(
             config.smtp_user.clone(),
             config.smtp_password.clone(),
