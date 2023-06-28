@@ -10,20 +10,27 @@ use crate::errors::Error;
 pub struct Upload {
     pub id: Uuid,
     pub file_name: String,
+    pub file_type: String,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
     pub uploaded_at: Option<DateTime<Utc>>,
 }
 
-pub async fn create_upload(pool: &PgPool, file_name: String) -> Result<Upload, Error> {
+pub struct NewUpload {
+    pub file_name: String,
+    pub file_type: String,
+}
+
+pub async fn create_upload(pool: &PgPool, upload: NewUpload) -> Result<Upload, Error> {
     sqlx::query_as!(
         Upload,
         "
-            INSERT INTO \"upload\" (file_name)
-            VALUES ($1)
-            RETURNING id, file_name, created_at, updated_at, uploaded_at;
+            INSERT INTO \"upload\" (file_name, file_type)
+            VALUES ($1, $2)
+            RETURNING id, file_name, file_type, created_at, updated_at, uploaded_at;
         ",
-        file_name
+        upload.file_name,
+        upload.file_type
     )
     .fetch_one(pool)
     .await
@@ -34,7 +41,7 @@ pub async fn get_incoming_upload_by_id(pool: &PgPool, id: Uuid) -> Result<Upload
     sqlx::query_as!(
         Upload,
         "
-            SELECT id, file_name, created_at, updated_at, uploaded_at
+            SELECT id, file_name, file_type, created_at, updated_at, uploaded_at
             FROM \"upload\"
             WHERE
                 id = $1

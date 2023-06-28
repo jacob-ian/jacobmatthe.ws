@@ -19,6 +19,7 @@ use crate::{
 #[derive(Deserialize)]
 struct CreateUploadBody {
     file_name: String,
+    file_type: String,
 }
 
 async fn create_upload(
@@ -36,7 +37,14 @@ async fn create_upload(
             "File with that name already exists"
         )));
     }
-    let upload = db::uploads::create_upload(&pool, payload.file_name).await?;
+    let upload = db::uploads::create_upload(
+        &pool,
+        db::uploads::NewUpload {
+            file_name: payload.file_name,
+            file_type: payload.file_type,
+        },
+    )
+    .await?;
     Ok(HttpResponse::Ok().json(upload))
 }
 
