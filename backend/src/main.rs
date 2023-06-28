@@ -16,7 +16,7 @@ async fn main() -> std::io::Result<()> {
         }
     };
 
-    let pool = match db::setup_pool_from_config(&config).await {
+    let pool = match db::pool_from_config(&config).await {
         Ok(val) => val,
         Err(err) => {
             eprintln!("{}", err);
