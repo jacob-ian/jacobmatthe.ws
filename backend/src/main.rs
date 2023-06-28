@@ -1,14 +1,8 @@
-use actix_session;
-use actix_session::config::PersistentSession;
-use actix_session::storage::CookieSessionStore;
-use actix_session::SessionMiddleware;
-use actix_web::cookie::time::Duration;
-use actix_web::cookie::{Key, SameSite};
 use actix_web::{error, web, App, HttpServer, ResponseError};
 use backend::config::Config;
-use backend::db;
 use backend::errors::Error;
 use backend::handlers;
+use backend::{auth, db};
 use std::process;
 
 #[actix_web::main]
@@ -41,24 +35,8 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(pool.clone()))
             .app_data(web::Data::clone(&app_config))
             .app_data(json_config.clone())
-            .wrap(
-                SessionMiddleware::builder(
-                    CookieSessionStore::default(),
-                    Key::from(app_config.auth.session_key.as_bytes()),
-                )
-                .cookie_name(String::from("sid"))
-                .cookie_same_site(SameSite::Strict)
-                .cookie_http_only(true)
-                .cookie_secure(app_config.auth.secure_cookies)
-                .session_lifecycle(PersistentSession::default().session_ttl(Duration::days(7)))
-                .build(),
-            )
-            .route("/", web::get().to(handlers::health_check))
-            .service(web::scope("/auth").configure(handlers::auth::config))
-            .service(web::scope("/users").configure(handlers::users::config))
-            .service(web::scope("/posts").configure(handlers::posts::config))
-            .service(web::scope("/drafts").configure(handlers::drafts::config))
-            .service(web::scope("/uploads").configure(handlers::uploads::config))
+            .wrap(auth::sessions::middleware_from_config(&app_config))
+            .configure(handlers::config)
     })
     .bind((config.host.clone(), config.port.clone()))?
     .run();
