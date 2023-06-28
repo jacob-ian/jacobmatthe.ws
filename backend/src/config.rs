@@ -1,25 +1,8 @@
-use std::{collections::HashMap, env, fs, path::Path, str::FromStr};
+use std::{collections::HashMap, env, fs, path::Path};
 
 use serde::Deserialize;
 
 use crate::{errors::Error, files};
-
-#[derive(Clone, Deserialize)]
-pub enum Environment {
-    DEVELOPMENT,
-    PRODUCTION,
-}
-
-impl FromStr for Environment {
-    type Err = Error;
-    fn from_str(s: &str) -> Result<Self, Error> {
-        match s {
-            "development" => Ok(Environment::DEVELOPMENT),
-            "production" => Ok(Environment::PRODUCTION),
-            _ => Err(Error::InvalidEnv(String::from("ENV"))),
-        }
-    }
-}
 
 #[derive(Deserialize, Clone)]
 pub struct EmailConfig {
