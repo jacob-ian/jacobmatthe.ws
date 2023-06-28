@@ -15,4 +15,4 @@ smtp_user = "noreply"
 smtp_password = "password"
 
 [uploads]
-dir = "./uploads"
+dir = "/var/www/example.com/uploads"
