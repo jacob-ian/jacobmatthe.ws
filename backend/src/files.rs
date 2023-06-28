@@ -16,7 +16,7 @@ use std::{
 
 pub fn upload_file(config: &Config, upload: &Upload, buffer: &[u8]) -> Result<(), Error> {
     let path = create_path(&config.uploads.dir, &upload.file_name);
-    let exists = File::open(&path).is_ok();
+    let exists = Path::new(&path).is_file();
     if exists {
         return Err(Error::BadRequestError(format!("File already exists")));
     }
