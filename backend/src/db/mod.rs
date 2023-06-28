@@ -4,6 +4,7 @@ use crate::config::{self, Config};
 
 pub mod email_verifications;
 pub mod posts;
+pub mod uploads;
 pub mod user_credentials;
 pub mod users;
 

@@ -60,6 +60,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::scope("/users").configure(handlers::users::config))
             .service(web::scope("/posts").configure(handlers::posts::config))
             .service(web::scope("/drafts").configure(handlers::drafts::config))
+            .service(web::scope("/uploads").configure(handlers::uploads::config))
     })
     .bind((config.host.clone(), config.port.clone()))?
     .run();
