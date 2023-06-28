@@ -2,7 +2,10 @@ use sqlx::PgPool;
 
 use crate::{
     config::Config,
-    db::{self, uploads::Upload},
+    db::{
+        self,
+        uploads::{NewUpload, Upload},
+    },
     errors::Error,
 };
 use std::{
@@ -30,6 +33,19 @@ pub fn create_file_from_upload(
 
 fn create_path(dir: &String, file_name: &String) -> String {
     format!("{}/{}", dir, file_name)
+}
+
+pub async fn create_file_upload(
+    config: &Config,
+    pool: &PgPool,
+    new_upload: NewUpload,
+) -> Result<Upload, Error> {
+    if file_exists(config, &new_upload.file_name) {
+        return Err(Error::BadRequestError(format!(
+            "A file with that name already exists"
+        )));
+    }
+    db::uploads::create_upload(pool, new_upload).await
 }
 
 pub async fn delete_file_upload(

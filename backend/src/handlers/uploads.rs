@@ -11,15 +11,15 @@ use uuid::Uuid;
 
 use crate::{
     config::Config,
-    db,
+    db::{self, uploads::NewUpload},
     errors::Error,
-    files::{self, file_exists},
+    files,
 };
 
 #[derive(Deserialize)]
-struct CreateUploadBody {
-    file_name: String,
-    file_type: String,
+pub struct CreateUploadBody {
+    pub file_name: String,
+    pub file_type: String,
 }
 
 async fn get_uploads(session: Session, pool: web::Data<PgPool>) -> Result<HttpResponse, Error> {
@@ -40,19 +40,17 @@ async fn create_upload(
         return Err(Error::UnauthorizedError(format!("Unauthorized")));
     }
     let payload = body.into_inner();
-    if file_exists(&config, &payload.file_name) {
-        return Err(Error::BadRequestError(format!(
-            "File with that name already exists"
-        )));
-    }
-    let upload = db::uploads::create_upload(
+    let upload = files::create_file_upload(
+        &config,
         &pool,
-        db::uploads::NewUpload {
+        NewUpload {
             file_name: payload.file_name,
             file_type: payload.file_type,
+            post_id: None,
         },
     )
     .await?;
+
     Ok(HttpResponse::Ok().json(upload))
 }
 

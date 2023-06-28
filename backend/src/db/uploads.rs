@@ -20,22 +20,42 @@ pub struct Upload {
 pub struct NewUpload {
     pub file_name: String,
     pub file_type: String,
+    pub post_id: Option<Uuid>,
 }
 
-pub async fn create_upload(pool: &PgPool, upload: NewUpload) -> Result<Upload, Error> {
-    sqlx::query_as!(
+pub async fn create_upload(pool: &PgPool, new_upload: NewUpload) -> Result<Upload, Error> {
+    let upload = sqlx::query_as!(
         Upload,
         "
             INSERT INTO \"upload\" (file_name, file_type)
             VALUES ($1, $2)
             RETURNING id, file_name, file_type, created_by, created_at, updated_at, uploaded_at;
         ",
-        upload.file_name,
-        upload.file_type
+        new_upload.file_name,
+        new_upload.file_type
     )
     .fetch_one(pool)
     .await
-    .map_err(|e| Error::from_sqlx(e, "Upload"))
+    .map_err(|e| Error::from_sqlx(e, "Upload"))?;
+
+    if let None = new_upload.post_id {
+        return Ok(upload);
+    }
+
+    let post_id = new_upload.post_id.unwrap();
+    sqlx::query!(
+        "
+            INSERT INTO \"post_upload\" (post_id, upload_id)
+            VALUES ($1, $2);
+        ",
+        post_id,
+        upload.id,
+    )
+    .execute(pool)
+    .await
+    .map_err(|e| Error::from_sqlx(e, "Post Upload"))?;
+
+    Ok(upload)
 }
 
 pub async fn get_uploads(pool: &PgPool) -> Result<Vec<Upload>, Error> {

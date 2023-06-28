@@ -4,13 +4,18 @@ use sqlx::PgPool;
 use uuid::Uuid;
 
 use crate::{
+    config::Config,
     db::{
         self,
         posts::{NewPost, UpdatePost},
+        uploads::NewUpload,
         users::is_email_verified,
     },
     errors::{self, Error},
+    files,
 };
+
+use super::uploads::CreateUploadBody;
 
 /// Gets the drafts
 pub async fn get_drafts(
@@ -92,10 +97,36 @@ pub async fn get_draft_uploads(
     Ok(HttpResponse::Ok().json(uploads))
 }
 
+pub async fn create_draft_upload(
+    session: Session,
+    pool: web::Data<PgPool>,
+    config: web::Data<Config>,
+    path: web::Path<Uuid>,
+    body: web::Json<CreateUploadBody>,
+) -> Result<HttpResponse, Error> {
+    if let Ok(None) = session.get::<Uuid>("user_id") {
+        return Err(Error::UnauthorizedError(format!("Unauthorized")));
+    }
+    let post_id = path.into_inner();
+    let payload = body.into_inner();
+    let upload = files::create_file_upload(
+        &config,
+        &pool,
+        NewUpload {
+            file_name: payload.file_name,
+            file_type: payload.file_type,
+            post_id: Some(post_id),
+        },
+    )
+    .await?;
+    Ok(HttpResponse::Created().json(upload))
+}
+
 pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.route("", web::get().to(get_drafts));
     cfg.route("", web::post().to(create_draft));
     cfg.route("/{id}", web::get().to(get_draft_by_id));
     cfg.route("/{id}", web::put().to(update_draft_by_id));
     cfg.route("/{id}/uploads", web::get().to(get_draft_uploads));
+    cfg.route("/{id}/uploads", web::post().to(create_draft_upload));
 }
