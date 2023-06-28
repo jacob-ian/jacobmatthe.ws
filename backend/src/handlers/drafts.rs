@@ -87,6 +87,7 @@ pub async fn get_draft_uploads(
         return Err(Error::UnauthorizedError(format!("Unauthorized")));
     }
     let post_id = path.into_inner();
+    let _post = db::posts::get_draft_by_id(&pool, post_id).await?;
     let uploads = db::uploads::get_uploads_by_post_id(&pool, post_id).await?;
     Ok(HttpResponse::Ok().json(uploads))
 }
