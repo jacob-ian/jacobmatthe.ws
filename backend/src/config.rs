@@ -18,6 +18,7 @@ pub struct EmailConfig {
 pub struct AuthConfig {
     pub session_key: String,
     pub secure_cookies: bool,
+    pub whitelist: Option<Vec<String>>,
 }
 
 #[derive(Deserialize, Clone)]
@@ -70,73 +71,5 @@ impl Config {
         files::check_directory(&config.uploads.dir)
             .map_err(|_| Error::ConfigError(format!("Uploads directory does not exist")))?;
         Ok(())
-    }
-
-    pub fn from_env(vars: env::Vars) -> Result<Config, Error> {
-        let map: HashMap<String, String> = HashMap::from_iter(vars);
-        let email_config = EmailConfig {
-            sender_address: map
-                .get("SENDER_ADDRESS")
-                .ok_or(Error::MissingEnv(format!("SENDER_ADDRESS")))?
-                .to_string(),
-            sender_name: map
-                .get("SENDER_NAME")
-                .ok_or(Error::MissingEnv(format!("SENDER_NAME")))?
-                .to_string(),
-            smtp_host: map
-                .get("SMTP_HOST")
-                .ok_or(Error::MissingEnv(format!("SMTP_HOST")))?
-                .to_string(),
-            smtp_port: map
-                .get("SMTP_PORT")
-                .ok_or(Error::MissingEnv(format!("SMTP_PORT")))?
-                .parse()
-                .map_err(|_| Error::InvalidEnv(format!("SMTP_PORT")))?,
-            smtp_user: map
-                .get("SMTP_USER")
-                .ok_or(Error::MissingEnv(format!("SMTP_USER")))?
-                .to_string(),
-            smtp_password: map
-                .get("SMTP_PASSWORD")
-                .ok_or(Error::MissingEnv(format!("SMTP_PASSWORD")))?
-                .to_string(),
-        };
-        let auth_config = AuthConfig {
-            session_key: map
-                .get("SESSION_KEY")
-                .ok_or(Error::MissingEnv(format!("SESSION_KEY")))?
-                .to_string(),
-            secure_cookies: map
-                .get("ENVIRONMENT")
-                .unwrap_or(&String::from("production"))
-                .to_string()
-                == format!("production"),
-        };
-        let uploads_config = UploadsConfig {
-            dir: map
-                .get("UPLOADS_DIR")
-                .ok_or(Error::MissingEnv(format!("UPLOADS_DIR")))?
-                .to_string(),
-        };
-        let config = Config {
-            host: map
-                .get("HOST")
-                .ok_or(Error::MissingEnv(format!("HOST")))?
-                .to_string(),
-            port: map
-                .get("PORT")
-                .ok_or(Error::MissingEnv(format!("PORT")))?
-                .parse()
-                .map_err(|_| Error::InvalidEnv(format!("PORT")))?,
-            database_url: map
-                .get("DATABASE_URL")
-                .ok_or(Error::MissingEnv(format!("DATABASE_URL")))?
-                .to_string(),
-            email: email_config,
-            auth: auth_config,
-            uploads: uploads_config,
-        };
-        Self::verify_config(&config)?;
-        Ok(config)
     }
 }
