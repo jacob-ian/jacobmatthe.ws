@@ -1,9 +1,9 @@
 use actix_web::{error, web, App, HttpServer, ResponseError};
 use backend::auth::sessions;
 use backend::config::Config;
+use backend::db;
 use backend::errors::Error;
 use backend::handlers;
-use backend::{auth, db};
 use std::process;
 
 #[actix_web::main]
@@ -42,11 +42,8 @@ async fn main() -> std::io::Result<()> {
     .bind((config.host.clone(), config.port.clone()))?
     .run();
 
-    println!("-------\nSuccessfully started jacobmatthe.ws/api!\n");
-    println!(
-        "Server is listening on {}:{}\n-------",
-        &config.host, &config.port
-    );
+    println!("\n-------\n\nSuccessfully started jacobmatthe.ws/api!\n");
+    println!("Listening on {}:{}\n\n-------", &config.host, &config.port);
 
     return server.await;
 }

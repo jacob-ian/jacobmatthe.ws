@@ -85,7 +85,8 @@ impl Config {
 
     fn verify_config(config: &Config) -> Result<(), Error> {
         files::check_directory(&config.uploads.dir)
-            .map_err(|e| Error::ConfigError(format!("Uploads directory does not exist")))
+            .map_err(|_| Error::ConfigError(format!("Uploads directory does not exist")))?;
+        Ok(())
     }
 
     pub fn from_env(vars: env::Vars) -> Result<Config, Error> {
@@ -152,7 +153,7 @@ impl Config {
             auth: auth_config,
             uploads: uploads_config,
         };
-        Self::verify_config(&config);
+        Self::verify_config(&config)?;
         Ok(config)
     }
 }
