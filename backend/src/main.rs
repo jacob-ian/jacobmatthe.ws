@@ -1,4 +1,5 @@
 use actix_web::{error, web, App, HttpServer, ResponseError};
+use backend::auth::sessions;
 use backend::config::Config;
 use backend::errors::Error;
 use backend::handlers;
@@ -35,7 +36,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(pool.clone()))
             .app_data(web::Data::clone(&app_config))
             .app_data(json_config.clone())
-            .wrap(auth::sessions::middleware_from_config(&app_config))
+            .wrap(sessions::middleware_from_config(&app_config))
             .configure(handlers::config)
     })
     .bind((config.host.clone(), config.port.clone()))?
