@@ -1,0 +1,18 @@
+host = "127.0.0.1"
+port = 3000
+database_url = "postgres://backend:password@localhost:5432/backend"
+
+[auth]
+session_key = "b2d6ec08a9419fd3e1c3f291148fff5d49a0cb2bcb78a4b15878e8a0139e44f9"
+secure_cookies = true 
+
+[email]
+sender_name = "Support"
+sender_address = "noreply@example.com"
+smtp_host = "mail.example.com"
+smtp_port = 587
+smtp_user = "noreply"
+smtp_password = "password"
+
+[uploads]
+dir = "./uploads"
