@@ -14,6 +14,7 @@ pub struct ErrorBody {
 pub enum Error {
     MissingEnv(String),
     InvalidEnv(String),
+    ConfigError(String),
     DatabaseError(String),
     NotFoundError(String),
     UnauthorizedError(String),
@@ -47,6 +48,7 @@ impl Display for Error {
         match self {
             Self::MissingEnv(val) => write!(f, "Missing environment variable: {}", val),
             Self::InvalidEnv(val) => write!(f, "Invalid environment variable: {}", val),
+            Self::ConfigError(val) => write!(f, "Could not read config: {}", val),
             Self::DatabaseError(val) => write!(f, "{}", val),
             Self::NotFoundError(val) => write!(f, "{}", val),
             Self::UnauthorizedError(val) => write!(f, "{}", val),

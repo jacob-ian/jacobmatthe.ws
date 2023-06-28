@@ -5,15 +5,16 @@ use actix_session::SessionMiddleware;
 use actix_web::cookie::time::Duration;
 use actix_web::cookie::{Key, SameSite};
 use actix_web::{error, web, App, HttpServer, ResponseError};
-use backend::config::{Config, Environment};
+use backend::config::Config;
 use backend::db;
 use backend::errors::Error;
 use backend::handlers;
-use std::{env, process};
+use std::process;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let config = match Config::from_env(env::vars()) {
+    println!("Starting up...");
+    let config = match Config::from_toml() {
         Ok(val) => val,
         Err(err) => {
             eprintln!("{}", err);
@@ -43,15 +44,12 @@ async fn main() -> std::io::Result<()> {
             .wrap(
                 SessionMiddleware::builder(
                     CookieSessionStore::default(),
-                    Key::from(app_config.session_key.as_bytes()),
+                    Key::from(app_config.auth.session_key.as_bytes()),
                 )
                 .cookie_name(String::from("sid"))
                 .cookie_same_site(SameSite::Strict)
                 .cookie_http_only(true)
-                .cookie_secure(match app_config.environment {
-                    Environment::DEVELOPMENT => false,
-                    _ => true,
-                })
+                .cookie_secure(app_config.auth.secure_cookies)
                 .session_lifecycle(PersistentSession::default().session_ttl(Duration::days(7)))
                 .build(),
             )
@@ -65,8 +63,11 @@ async fn main() -> std::io::Result<()> {
     .bind((config.host.clone(), config.port.clone()))?
     .run();
 
-    println!("-------\nSuccessfully started jacobmatthe.ws/api!\n-------");
-    println!("Server is listening on {}:{}", &config.host, &config.port);
+    println!("-------\nSuccessfully started jacobmatthe.ws/api!\n");
+    println!(
+        "Server is listening on {}:{}\n-------",
+        &config.host, &config.port
+    );
 
     return server.await;
 }

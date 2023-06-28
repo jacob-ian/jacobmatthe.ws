@@ -19,3 +19,4 @@ argon2 = "0.5"
 rand = { version = "0.8" }
 lettre = { version = "0.10", features = [ "native-tls"] }
 futures-util = "0.3.28"
+toml = { version = "0.7.5" }

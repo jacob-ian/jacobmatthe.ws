@@ -1,6 +1,6 @@
 use sqlx::{migrate, postgres::PgPoolOptions, Pool, Postgres};
 
-use crate::config::{self, Config};
+use crate::config::Config;
 
 pub mod email_verifications;
 pub mod posts;
@@ -15,9 +15,6 @@ pub async fn setup_pool_from_config(config: &Config) -> Result<Pool<Postgres>, s
         .connect(&config.database_url)
         .await?;
 
-    if let config::Environment::PRODUCTION = &config.environment {
-        migrate!("./migrations").run(&pool).await?;
-    }
-
+    migrate!("./migrations").run(&pool).await?;
     return Ok(pool);
 }

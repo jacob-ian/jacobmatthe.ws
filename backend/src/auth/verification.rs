@@ -45,8 +45,8 @@ pub async fn send_verification_email(
                 email_address: user.email,
             },
             sender: Address {
-                name: config.from_name.clone(),
-                email_address: config.from_email.clone(),
+                name: config.email.sender_name.clone(),
+                email_address: config.email.sender_address.clone(),
             },
             subject: String::from("Verify Your Email"),
             text: format!(
@@ -66,7 +66,7 @@ pub async fn send_verification_email(
                     <p>{}</p>
                 </html>
                 ",
-                user.first_name, code, config.from_name
+                user.first_name, code, config.email.sender_name
             ),
         },
     )

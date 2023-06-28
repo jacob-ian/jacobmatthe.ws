@@ -6,7 +6,7 @@ pub fn create_file_from_upload(
     upload: &Upload,
     buffer: &[u8],
 ) -> Result<(), Error> {
-    let path = format!("{}/{}", config.uploads_dir, &upload.file_name);
+    let path = format!("{}/{}", config.uploads.dir, &upload.file_name);
     let exists = File::open(&path).is_ok();
     if exists {
         return Err(Error::BadRequestError(format!("File already exists")));
@@ -27,6 +27,6 @@ pub fn check_directory(directory: &String) -> Result<(), Error> {
 }
 
 pub fn file_exists(config: &Config, file_name: &str) -> bool {
-    let path = format!("{}/{}", config.uploads_dir, file_name);
+    let path = format!("{}/{}", config.uploads.dir, file_name);
     Path::new(&path).is_file()
 }
