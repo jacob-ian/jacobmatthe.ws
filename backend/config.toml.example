@@ -5,6 +5,7 @@ database_url = "postgres://backend:password@localhost:5432/backend"
 [auth]
 session_key = "b2d6ec08a9419fd3e1c3f291148fff5d49a0cb2bcb78a4b15878e8a0139e44f9"
 secure_cookies = true 
+whitelist = ["user@example.com"]
 
 [email]
 sender_name = "Support"

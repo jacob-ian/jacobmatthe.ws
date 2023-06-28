@@ -84,6 +84,11 @@ async fn register_user(
         return Err(Error::BadRequestError(format!("Already signed in")));
     }
     let new_user = body.into_inner();
+    if let Some(whitelist) = &config.auth.whitelist {
+        if !whitelist.contains(&new_user.email) {
+            return Err(Error::ForbiddenError(format!("Forbidden")));
+        }
+    }
     if let Ok(_) = db::users::get_user_by_email(&pool, new_user.email.clone()).await {
         return Err(Error::BadRequestError(format!(
             "User with this email already exists"
