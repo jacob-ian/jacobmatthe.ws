@@ -22,6 +22,14 @@ struct CreateUploadBody {
     file_type: String,
 }
 
+async fn get_uploads(session: Session, pool: web::Data<PgPool>) -> Result<HttpResponse, Error> {
+    if let Ok(None) = session.get::<Uuid>("user_id") {
+        return Err(Error::UnauthorizedError(format!("Unauthorized")));
+    }
+    let uploads = db::uploads::get_uploads(&pool).await?;
+    Ok(HttpResponse::Ok().json(uploads))
+}
+
 async fn create_upload(
     session: Session,
     pool: web::Data<PgPool>,
@@ -77,7 +85,26 @@ async fn upload_file(
     Ok(HttpResponse::Ok().into())
 }
 
+async fn delete_upload(
+    pool: web::Data<PgPool>,
+    config: web::Data<Config>,
+    session: Session,
+    path: web::Path<Uuid>,
+) -> Result<HttpResponse, Error> {
+    if let Ok(None) = session.get::<Uuid>("user_id") {
+        return Err(Error::UnauthorizedError(format!("Unauthorized")));
+    }
+
+    let upload_id = path.into_inner();
+    let upload = db::uploads::get_upload_by_id(&pool, upload_id).await?;
+    files::delete_file_upload(&config, &pool, &upload).await?;
+
+    Ok(HttpResponse::NoContent().into())
+}
+
 pub fn config(cfg: &mut ServiceConfig) {
+    cfg.service(web::resource("").route(web::get().to(get_uploads)));
     cfg.service(web::resource("").route(web::post().to(create_upload)));
     cfg.service(web::resource("/{upload_id}").route(web::put().to(upload_file)));
+    cfg.service(web::resource("/{upload_id}").route(web::delete().to(delete_upload)));
 }

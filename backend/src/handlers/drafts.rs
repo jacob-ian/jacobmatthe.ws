@@ -78,9 +78,23 @@ pub async fn update_draft_by_id(
     Ok(HttpResponse::Created().json(draft))
 }
 
+pub async fn get_draft_uploads(
+    session: Session,
+    pool: web::Data<PgPool>,
+    path: web::Path<Uuid>,
+) -> Result<HttpResponse, Error> {
+    if let Ok(None) = session.get::<Uuid>("user_id") {
+        return Err(Error::UnauthorizedError(format!("Unauthorized")));
+    }
+    let post_id = path.into_inner();
+    let uploads = db::uploads::get_uploads_by_post_id(&pool, post_id).await?;
+    Ok(HttpResponse::Ok().json(uploads))
+}
+
 pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.route("", web::get().to(get_drafts));
     cfg.route("", web::post().to(create_draft));
     cfg.route("/{id}", web::get().to(get_draft_by_id));
     cfg.route("/{id}", web::put().to(update_draft_by_id));
+    cfg.route("/{id}/uploads", web::get().to(get_draft_uploads));
 }
