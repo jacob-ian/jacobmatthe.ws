@@ -14,11 +14,7 @@ use std::{
     path::Path,
 };
 
-pub fn create_file_from_upload(
-    config: &Config,
-    upload: &Upload,
-    buffer: &[u8],
-) -> Result<(), Error> {
+pub fn upload_file(config: &Config, upload: &Upload, buffer: &[u8]) -> Result<(), Error> {
     let path = create_path(&config.uploads.dir, &upload.file_name);
     let exists = File::open(&path).is_ok();
     if exists {

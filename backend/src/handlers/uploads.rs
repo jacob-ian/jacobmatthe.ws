@@ -78,7 +78,7 @@ async fn upload_file(
             }
         }
     }
-    files::create_file_from_upload(&config, &upload, &buffer)?;
+    files::upload_file(&config, &upload, &buffer)?;
     db::uploads::set_as_uploaded_by_id(&pool, upload_id).await?;
     Ok(HttpResponse::Ok().into())
 }
