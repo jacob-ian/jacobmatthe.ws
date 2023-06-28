@@ -47,7 +47,7 @@ pub async fn get_incoming_upload_by_id(pool: &PgPool, id: Uuid) -> Result<Upload
     .map_err(|e| Error::from_sqlx(e, "Upload"))
 }
 
-pub async fn set_upload_complete_by_id(pool: &PgPool, id: Uuid) -> Result<(), Error> {
+pub async fn set_as_uploaded_by_id(pool: &PgPool, id: Uuid) -> Result<(), Error> {
     sqlx::query_as!(
         Upload,
         "
