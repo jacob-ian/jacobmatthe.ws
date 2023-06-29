@@ -17,6 +17,14 @@ pub struct Upload {
     pub uploaded_at: Option<DateTime<Utc>>,
 }
 
+#[allow(dead_code)]
+pub struct PostUpload {
+    pub id: Uuid,
+    pub post_id: Uuid,
+    pub upload_id: Uuid,
+    pub created_at: DateTime<Utc>,
+}
+
 pub struct NewUpload {
     pub file_name: String,
     pub file_type: String,
@@ -155,6 +163,29 @@ pub async fn set_as_uploaded_by_id(pool: &PgPool, id: Uuid) -> Result<(), Error>
 }
 
 pub async fn delete_by_id(pool: &PgPool, id: Uuid) -> Result<(), Error> {
+    match sqlx::query_as!(
+        PostUpload,
+        "
+            DELETE FROM \"post_upload\"
+            WHERE
+                upload_id = $1;
+        ",
+        id
+    )
+    .fetch_one(pool)
+    .await
+    .map_err(|e| Error::from_sqlx(e, "Post Upload"))
+    {
+        Ok(_) => Ok(()),
+        Err(e) => {
+            if let Error::NotFoundError(_) = e {
+                Ok(())
+            } else {
+                Err(e)
+            }
+        }
+    }?;
+
     sqlx::query!(
         "
             UPDATE \"upload\"
