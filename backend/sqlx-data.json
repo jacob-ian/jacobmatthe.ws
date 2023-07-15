@@ -1,0 +1,1222 @@
+{
+  "db": "PostgreSQL",
+  "036aadc1e38fd3610a60eee9ee32d636d77d87d523a2b43d8431ad481f072a2f": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "first_name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "last_name",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "email",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "biography",
+          "ordinal": 4,
+          "type_info": "Text"
+        },
+        {
+          "name": "photo_url",
+          "ordinal": 5,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "email_verified",
+          "ordinal": 6,
+          "type_info": "Bool"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 8,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Varchar",
+          "Varchar",
+          "Varchar"
+        ]
+      }
+    },
+    "query": "\n             INSERT INTO \"user\" (first_name, last_name, email, photo_url)\n             VALUES ($1, $2, $3, $4)\n             RETURNING *;\n         "
+  },
+  "05a1c4bb9640e7bb4115f86998c6ee55554433b2aa015831efc7b5c39135988d": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "file_name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "file_type",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "created_by",
+          "ordinal": 3,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 4,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 5,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "uploaded_at",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            SELECT id, file_name, file_type, created_by, created_at, updated_at, uploaded_at\n            FROM \"upload\"\n            WHERE\n                id = $1\n                AND uploaded_at IS NULL\n                AND deleted_at IS NULL;\n        "
+  },
+  "107120bf8ca045bc1c0936915709d16bb0a8a5eb3da194ade66f5c6ceca189c5": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "first_name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "last_name",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "email",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "biography",
+          "ordinal": 4,
+          "type_info": "Text"
+        },
+        {
+          "name": "photo_url",
+          "ordinal": 5,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "email_verified",
+          "ordinal": 6,
+          "type_info": "Bool"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 8,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            SELECT * FROM \"user\"\n            WHERE id= $1;\n        "
+  },
+  "1684de6bb148892f6d63ccb2f5cc1707f62d0f62d981e56b2d2b544b152dc4ff": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            UPDATE \"user\"\n            SET\n                email_verified = true\n            WHERE\n                id = $1;\n        "
+  },
+  "1aa34da27455a8e57955b7111392b408cd3f48f09e2928584158b7c1a2a47090": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            UPDATE \"upload\"\n            SET \n                uploaded_at = now()\n            WHERE\n                id = $1\n                AND deleted_at IS NULL;\n        "
+  },
+  "1b062eb5a9f61a0805b8cae7a4f8d6fb81d3302d5c037d62f6b08e9ff4ecdd31": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "author_id",
+          "ordinal": 1,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "stub",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "title",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "description",
+          "ordinal": 4,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "content",
+          "ordinal": 5,
+          "type_info": "Text"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "published_at",
+          "ordinal": 8,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            SELECT id,author_id,stub,title,description,content,created_at,updated_at,published_at \n            FROM \"post\"\n            WHERE\n                deleted_at IS NULL\n                AND published_at IS NULL\n                AND id = $1;\n        "
+  },
+  "262d407794c0df2b4a515858a092782065460215c5b79d4e78962ee7d411d617": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "file_name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "file_type",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "created_by",
+          "ordinal": 3,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 4,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 5,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "uploaded_at",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            SELECT \n                upload.id, \n                upload.file_name, \n                upload.file_type, \n                upload.created_by, \n                upload.created_at, \n                upload.updated_at, \n                upload.uploaded_at\n            FROM \"upload\"\n            LEFT JOIN \"post_upload\" on upload_id = upload.id\n            WHERE \n                \"post_upload\".post_id = $1\n                AND deleted_at IS NULL\n                AND uploaded_at IS NULL;\n        "
+  },
+  "2f03817faabc36b446c3fb00dc6bb31e7f702c61d192b1166a1a206515ce6bf9": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "file_name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "file_type",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "created_by",
+          "ordinal": 3,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 4,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 5,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "uploaded_at",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            SELECT id, file_name, file_type, created_by, created_at, updated_at, uploaded_at\n            FROM \"upload\"\n            WHERE\n                id = $1\n                AND deleted_at IS NULL;\n        "
+  },
+  "362543e5b744d5e254c3dd657fb83a18f1652bbe152b02d2b0653a6bd476f7da": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "user_id",
+          "ordinal": 1,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "code",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 3,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "expires_at",
+          "ordinal": 4,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Varchar"
+        ]
+      }
+    },
+    "query": "\n            INSERT INTO \"email_verification\" (user_id, code)\n            VALUES ($1, $2)\n            RETURNING *;\n        "
+  },
+  "3a194433aa407f9d65926c14d6aecc39277ff2f379becaf425639dbff37a5026": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "user_id",
+          "ordinal": 1,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "password_hash",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 3,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 4,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Varchar"
+        ]
+      }
+    },
+    "query": "\n            INSERT INTO \"user_credential\" (user_id, password_hash)\n            VALUES ($1, $2)\n            ON CONFLICT (user_id)\n            DO\n                UPDATE SET password_hash = $2\n            RETURNING *;\n        "
+  },
+  "4a5aa0a64aeb08f6e870ec45e288119d0ad064388d5c7edd858d3f5d9e80d5ce": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "author_id",
+          "ordinal": 1,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "stub",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "title",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "description",
+          "ordinal": 4,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "content",
+          "ordinal": 5,
+          "type_info": "Text"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "published_at",
+          "ordinal": 8,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "\n            SELECT id,author_id,stub,title,description,content,created_at,updated_at,published_at \n            FROM \"post\"\n            WHERE \n                deleted_at IS NULL\n                AND published_at IS NOT NULL\n            ORDER BY created_at DESC;\n        "
+  },
+  "4afb344fcab50a50a698c23c70def32864d4dabc396c49b15ca74c434097ee43": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "user_id",
+          "ordinal": 1,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "code",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 3,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "expires_at",
+          "ordinal": 4,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Text"
+        ]
+      }
+    },
+    "query": "\n            SELECT *\n            FROM \"email_verification\"\n            WHERE\n                expires_at > now()\n                AND user_id = $1\n                AND code = $2;\n        "
+  },
+  "53bae1f8810e2410dcb670f0c41e041d94ea845c1dc759975bdd81ec7e7330a2": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "file_name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "file_type",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "created_by",
+          "ordinal": 3,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 4,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 5,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "uploaded_at",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "\n            SELECT id, file_name, file_type, created_by, created_at, updated_at, uploaded_at\n            FROM \"upload\"\n            WHERE \n                deleted_at IS NULL\n                AND uploaded_at IS NULL;\n        "
+  },
+  "5b61230857dbe8cef335a4512607e06497b4661bbe35bdd811dedbaf1eceb1cb": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "author_id",
+          "ordinal": 1,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "stub",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "title",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "description",
+          "ordinal": 4,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "content",
+          "ordinal": 5,
+          "type_info": "Text"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "published_at",
+          "ordinal": 8,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Varchar",
+          "Varchar",
+          "Text",
+          "Timestamptz",
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            UPDATE \"post\" \n            SET \n                updated_at = now(),\n                stub = $1,\n                title = $2,\n                description = $3,\n                content = $4,\n                published_at = $5\n            WHERE\n                deleted_at IS NULL\n                AND id = $6\n            RETURNING id, author_id, stub, title, description, content, created_at, updated_at, published_at;\n        "
+  },
+  "61fd4d5010c3c8faade2433dc6d9c2c130f885ead569f6f7b55b079e2dd18167": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "author_id",
+          "ordinal": 1,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "stub",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "title",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "description",
+          "ordinal": 4,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "content",
+          "ordinal": 5,
+          "type_info": "Text"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "published_at",
+          "ordinal": 8,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Varchar",
+          "Varchar",
+          "Varchar",
+          "Text"
+        ]
+      }
+    },
+    "query": "\n            INSERT INTO \"post\" (author_id, stub, title, description, content)\n            VALUES ($1, $2, $3, $4, $5)\n            RETURNING id, author_id, stub, title, description, content, created_at, updated_at, published_at;\n        "
+  },
+  "6206ade8b86fa6ad1fd8ec2c848934e1c176586f9781fd550b381a2cb8077da1": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "author_id",
+          "ordinal": 1,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "stub",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "title",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "description",
+          "ordinal": 4,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "content",
+          "ordinal": 5,
+          "type_info": "Text"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "published_at",
+          "ordinal": 8,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "\n            SELECT id,author_id,stub,title,description,content,created_at,updated_at,published_at \n            FROM \"post\"\n            WHERE\n                deleted_at IS NULL\n                AND published_at IS NULL\n            ORDER BY\n                created_at DESC;\n        "
+  },
+  "6228a9f705d3014fb539dfe84aa961d264ce5a4cb0e0d9bf33e4faf5c0d58be2": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "file_name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "file_type",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "created_by",
+          "ordinal": 3,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 4,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 5,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "uploaded_at",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Varchar"
+        ]
+      }
+    },
+    "query": "\n            INSERT INTO \"upload\" (file_name, file_type)\n            VALUES ($1, $2)\n            RETURNING id, file_name, file_type, created_by, created_at, updated_at, uploaded_at;\n        "
+  },
+  "6bd4f689dbc804a5d4d51babfdba23c5ed851a05929a3a3fc4c6cdde407fc789": {
+    "describe": {
+      "columns": [
+        {
+          "name": "password_hash",
+          "ordinal": 0,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n        SELECT password_hash\n        FROM \"user_credential\"\n        WHERE \n            user_id = $1;\n        "
+  },
+  "89eff139cc5ed1d6a2c08c6cc951df0da3241cc9486c598df1d667ca06836fbc": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "author_id",
+          "ordinal": 1,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "stub",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "title",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "description",
+          "ordinal": 4,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "content",
+          "ordinal": 5,
+          "type_info": "Text"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "published_at",
+          "ordinal": 8,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      }
+    },
+    "query": "\n            SELECT id,author_id,stub,title,description,content,created_at,updated_at,published_at \n            FROM \"post\"\n            WHERE\n                deleted_at IS NULL\n                AND published_at IS NOT NULL\n                AND stub = $1;\n        "
+  },
+  "cfec3798c33582bdc5cec68dcd0f427f76cf79022ca1ac8491e01f68dd7220a0": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            UPDATE \"upload\"\n            SET\n                deleted_at = now()\n            WHERE\n                id = $1;\n        "
+  },
+  "d1b974212b147ece40c4a99a35fdada411ccd66fc961eac69e4e35f796866a6c": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            UPDATE \"email_verification\"\n            SET\n                expires_at = now()\n            WHERE\n                user_id = $1\n                AND expires_at > now();\n        "
+  },
+  "daf72a2a5f5e019fb535dbe51e0e658639bb36386b7c178bb196f660b3cd0d74": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "first_name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "last_name",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "email",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "biography",
+          "ordinal": 4,
+          "type_info": "Text"
+        },
+        {
+          "name": "photo_url",
+          "ordinal": 5,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "email_verified",
+          "ordinal": 6,
+          "type_info": "Bool"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 8,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      }
+    },
+    "query": "\n            SELECT * FROM \"user\"\n            WHERE email = $1;\n        "
+  },
+  "dc3a51b3b9c5b5837be3063b86a0774236b9ec0542c9030f7c4c7118e249ffbd": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            INSERT INTO \"post_upload\" (post_id, upload_id)\n            VALUES ($1, $2);\n        "
+  },
+  "dc695ddf10d4d5a94381d0cc67e4f4ba9722e13c3745bfffbea0b97f9ac86482": {
+    "describe": {
+      "columns": [
+        {
+          "name": "email_verified",
+          "ordinal": 0,
+          "type_info": "Bool"
+        }
+      ],
+      "nullable": [
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            SELECT email_verified\n            FROM \"user\"\n            WHERE \n                id = $1;\n        "
+  },
+  "ec8774cd16eca3aeb424a7ee6ba3c3cb2bc4bce24e406ba67980706840503b9b": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "first_name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "last_name",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "email",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "biography",
+          "ordinal": 4,
+          "type_info": "Text"
+        },
+        {
+          "name": "photo_url",
+          "ordinal": 5,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "email_verified",
+          "ordinal": 6,
+          "type_info": "Bool"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 8,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Varchar",
+          "Varchar",
+          "Text",
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            UPDATE \"user\"\n            SET\n                updated_at = now(),\n                first_name = $1,\n                last_name = $2,\n                photo_url = $3,\n                biography = $4\n            WHERE id = $5\n            RETURNING *;\n        "
+  },
+  "f335caba5a3a8c2454903713cd58c2087425efe86bb7e765b1aea725e6dd425e": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            DELETE FROM \"post_upload\"\n            WHERE\n                upload_id = $1;\n        "
+  }
+}

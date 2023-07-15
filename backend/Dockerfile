@@ -1,10 +1,10 @@
-FROM rust:alpine3.18 as dev
+FROM rust:1.71-slim-buster as dev
 WORKDIR /src 
 COPY backend backend
 
-RUN apk add musl-dev openssl-dev
-RUN cargo install cargo-watch
+RUN apt update && apt install -y libssl-dev musl-dev pkg-config
 RUN cargo install sqlx-cli
 
 WORKDIR /src/backend
-CMD ["cargo", "watch", "-x", "run"]
+RUN cargo build
+CMD ["cargo", "run"]
