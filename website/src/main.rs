@@ -3,7 +3,7 @@ use actix_web::{http::header::ContentType, web, App, HttpResponse, HttpServer, R
 async fn index() -> impl Responder {
     return HttpResponse::Ok()
         .content_type(ContentType::html())
-        .body("<html><body><h1>You made it!</h1></body></html>");
+        .body("<html><body><h1>Yes!</h1></body></html>");
 }
 
 #[actix_web::main]
