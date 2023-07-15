@@ -1,21 +1,43 @@
 version: '3.8'
 
 services:
+  nginx: 
+    image: nginx:1.25
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/jacobmatthe.ws.conf:/etc/nginx/conf.d/default.conf
+      - ./uploads:/var/www/jacobmatthe.ws/public/uploads
+  website:
+    build: 
+      context: .
+      dockerfile: website/Dockerfile
+      target: dev
+    environment:
+      - HOST=0.0.0.0
+      - PORT=4000
+    expose:
+      - 4000
+    depends_on:
+      - backend
+      - nginx
+    volumes: 
+      - ./website:/src/website
+      - /src/website/target
   backend: 
     build: 
       context: .
       dockerfile: backend/Dockerfile
       target: dev
     environment:
-      - HOST=0.0.0.0
-      - PORT=3000
-      - DATABASE_URL=postgres://backend:password@db:5432/backend
-      - REDIS_URL=http://redis:6379
-      - ENVIRONMENT=development
-    ports:
-      - 3000:3000
+      - DATABASE_URL=postgres://backend:password@db:5432/backend # for dev
+    expose:
+      - 3000
     volumes:
       - ./backend:/src/backend
+      - /src/backend/target
+      - ./uploads:/src/uploads
     depends_on:
       - db
   db:
