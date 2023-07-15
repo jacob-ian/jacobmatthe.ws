@@ -9,7 +9,7 @@ async fn page() -> impl Responder {
 async fn index() -> impl Responder {
     return HttpResponse::Ok()
         .content_type(ContentType::html())
-        .body("<html><body><h1>Yes!</h1><a href=\"/page\">Page</a></body></html>");
+        .body("<html><body><h1>Welcome!</h1><a href=\"/page\">Page</a></body></html>");
 }
 
 #[actix_web::main]
