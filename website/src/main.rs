@@ -3,13 +3,13 @@ use actix_web::{http::header::ContentType, web, App, HttpResponse, HttpServer, R
 async fn page() -> impl Responder {
     return HttpResponse::Ok()
         .content_type(ContentType::html())
-        .body("<html><body><h1>Page</h1><img src=\"/uploads/test.jpg\"/></body></html>");
+        .body("<html><body><nav><a href=\"/\">Home</a></nav><h1>Page</h1><img src=\"/uploads/test.jpg\"/></body></html>");
 }
 
 async fn index() -> impl Responder {
     return HttpResponse::Ok()
         .content_type(ContentType::html())
-        .body("<html><body><h1>Yes!</h1></body></html>");
+        .body("<html><body><h1>Yes!</h1><a href=\"/page\">Page</a></body></html>");
 }
 
 #[actix_web::main]
