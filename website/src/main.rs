@@ -1,9 +1,17 @@
 use actix_web::{http::header::ContentType, web, App, HttpResponse, HttpServer, Responder};
+use website::html::HtmlResponse;
 
 async fn page() -> impl Responder {
-    return HttpResponse::Ok()
-        .content_type(ContentType::html())
-        .body("<html><body><nav><a href=\"/\">Home</a></nav><h1>Page</h1><img src=\"/uploads/test.jpg\"/></body></html>");
+    return HtmlResponse::builder()
+        .title(String::from("Page | jacobmatthe.ws"))
+        .body(
+            r#"
+        <h1>This is a page</h1>
+        <p>This is some content</p>
+            "#
+            .to_string(),
+        )
+        .build();
 }
 
 async fn index() -> impl Responder {
