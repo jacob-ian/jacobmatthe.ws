@@ -34,14 +34,6 @@ pub fn from_response(res: &HtmlResponse) -> String {
                     }}
                 </script>
             </head>
-            <style type="text/css">
-                html, body {{
-                    font-family: "Noto Serif", serif;
-                }}
-                code {{
-                    font-family: "JetBrains Mono", monospace;
-                }}
-            </style>
             <body class="bg-zinc-900 text-neutral-50">
                 {header}
                 {body}
