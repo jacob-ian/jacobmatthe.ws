@@ -2,6 +2,7 @@ use crate::html::HtmlResponse;
 
 use super::{footer, header};
 
+/// Returns a completed HTML page template from an HtmlResponse
 pub fn from_response(res: &HtmlResponse) -> String {
     let header = header::new();
     let footer = footer::new();
