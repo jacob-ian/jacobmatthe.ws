@@ -1,6 +1,8 @@
+use crate::html::HtmlResponse;
+
 use super::{footer, header};
 
-pub fn new(title: &'static str, description: &'static str, body: &'static str) -> String {
+pub fn from_response(res: &HtmlResponse) -> String {
     let header = header::new();
     let footer = footer::new();
     return format!(
@@ -46,10 +48,10 @@ pub fn new(title: &'static str, description: &'static str, body: &'static str) -
             </body>
         </html>
         "#,
-        title = title,
-        description = description,
+        title = res.head.title,
+        description = res.head.description,
         header = header,
-        body = body,
+        body = res.body,
         footer = footer
     );
 }

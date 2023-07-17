@@ -43,15 +43,15 @@ impl HtmlResponseBuilder {
 
 #[derive(Clone)]
 pub struct Head {
-    title: &'static str,
-    description: &'static str,
+    pub title: &'static str,
+    pub description: &'static str,
 }
 
 #[derive(Clone)]
 pub struct HtmlResponse {
     status: StatusCode,
-    head: Head,
-    body: &'static str,
+    pub head: Head,
+    pub body: &'static str,
 }
 
 impl HtmlResponse {
@@ -75,10 +75,6 @@ impl Responder for HtmlResponse {
     fn respond_to(self, _: &actix_web::HttpRequest) -> actix_web::HttpResponse<Self::Body> {
         return HttpResponse::build(self.status)
             .content_type(ContentType::html())
-            .body(templates::page::new(
-                self.head.title,
-                self.head.description,
-                self.body,
-            ));
+            .body(templates::page::from_response(&self));
     }
 }
