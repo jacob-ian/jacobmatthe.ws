@@ -4,27 +4,38 @@ use actix_web::{
     HttpResponse, Responder,
 };
 
+use crate::templates;
+
 pub struct HtmlResponseBuilder {
     response: HtmlResponse,
 }
 
 impl HtmlResponseBuilder {
+    /// Set the status code
     pub fn status(&mut self, status: StatusCode) -> &mut Self {
         self.response.status = status;
         return self;
     }
-    pub fn title(&mut self, title: String) -> &mut Self {
+
+    /// Set the head title
+    pub fn title(&mut self, title: &'static str) -> &mut Self {
         self.response.head.title = title;
         return self;
     }
-    pub fn description(&mut self, description: String) -> &mut Self {
+
+    /// Set the meta description
+    pub fn description(&mut self, description: &'static str) -> &mut Self {
         self.response.head.description = description;
         return self;
     }
-    pub fn body(&mut self, body: String) -> &mut Self {
+
+    /// Set the content of the <main></main> tag
+    pub fn body(&mut self, body: &'static str) -> &mut Self {
         self.response.body = body;
         return self;
     }
+
+    /// Build the HTML response
     pub fn build(&self) -> HtmlResponse {
         return self.response.clone();
     }
@@ -32,15 +43,15 @@ impl HtmlResponseBuilder {
 
 #[derive(Clone)]
 pub struct Head {
-    pub title: String,
-    pub description: String,
+    title: &'static str,
+    description: &'static str,
 }
 
 #[derive(Clone)]
 pub struct HtmlResponse {
     status: StatusCode,
     head: Head,
-    body: String,
+    body: &'static str,
 }
 
 impl HtmlResponse {
@@ -49,10 +60,10 @@ impl HtmlResponse {
             response: HtmlResponse {
                 status: StatusCode::OK,
                 head: Head {
-                    title: String::from("jacobmatthe.ws"),
-                    description: String::from("The blog of Jacob Matthews"),
+                    title: "jacobmatthe.ws",
+                    description: "The blog of Jacob Matthews",
                 },
-                body: String::new(),
+                body: "",
             },
         };
     }
@@ -64,22 +75,10 @@ impl Responder for HtmlResponse {
     fn respond_to(self, _: &actix_web::HttpRequest) -> actix_web::HttpResponse<Self::Body> {
         return HttpResponse::build(self.status)
             .content_type(ContentType::html())
-            .body(format!(
-                r#"
-                <!DOCTYPE html>
-                <html>
-                    <head>
-                        <meta charset="utf-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1" />
-                        <title>{title}</title>
-                        <meta name="description" content="{description}" />
-                    </head>
-                    <body>{body}</body>
-                </html>
-                "#,
-                title = self.head.title,
-                description = self.head.description,
-                body = self.body
+            .body(templates::page::new(
+                self.head.title,
+                self.head.description,
+                self.body,
             ));
     }
 }
