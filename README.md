@@ -6,4 +6,6 @@ This is the source code for my website!
 - PostgreSQL
 
 ## Frontend
-- Leptos SSR
+- Actix Web with custom SSR 
+- Tailwind CSS
+- HTMX
