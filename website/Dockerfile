@@ -3,7 +3,7 @@ WORKDIR /src
 COPY website website
 
 RUN apt update && apt install -y libssl-dev musl-dev pkg-config
+RUN cargo install cargo-watch
 
 WORKDIR /src/website
-RUN cargo build
-CMD ["cargo", "run"]
+CMD ["cargo", "watch", "-x", "run"]
