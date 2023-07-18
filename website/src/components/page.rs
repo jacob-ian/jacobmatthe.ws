@@ -9,7 +9,7 @@ pub fn from_response(res: &HtmlResponse) -> String {
     return format!(
         r#"
         <!DOCTYPE html>
-        <html class="subpixel-antialiased">
+        <html>
             <head>
                 <meta charset="utf-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -34,9 +34,13 @@ pub fn from_response(res: &HtmlResponse) -> String {
                     }}
                 </script>
             </head>
-            <body class="bg-zinc-900 text-neutral-50">
+            <body class="min-h-screen flex flex-col bg-zinc-900 font-mono text-sky-100">
                 {header}
-                {body}
+                <main class="flex flex-row flex-1 justify-center">
+                    <div class="p-10 flex-1 max-w-5xl border-x border-sky-600">
+                        {body}
+                    </div>
+                </main>
                 {footer}
             </body>
         </html>

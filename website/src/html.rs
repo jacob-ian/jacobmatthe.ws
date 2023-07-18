@@ -4,7 +4,7 @@ use actix_web::{
     HttpResponse, Responder,
 };
 
-use crate::templates;
+use crate::components;
 
 pub struct HtmlResponseBuilder {
     response: HtmlResponse,
@@ -75,6 +75,6 @@ impl Responder for HtmlResponse {
     fn respond_to(self, _: &actix_web::HttpRequest) -> actix_web::HttpResponse<Self::Body> {
         return HttpResponse::build(self.status)
             .content_type(ContentType::html())
-            .body(templates::page::from_response(&self));
+            .body(components::page::from_response(&self));
     }
 }
