@@ -30,7 +30,7 @@ impl HtmlResponseBuilder {
     }
 
     /// Set the content of the <main></main> tag
-    pub fn body(&mut self, body: &'static str) -> &mut Self {
+    pub fn body(&mut self, body: String) -> &mut Self {
         self.response.body = body;
         return self;
     }
@@ -51,7 +51,7 @@ pub struct Head {
 pub struct HtmlResponse {
     status: StatusCode,
     pub head: Head,
-    pub body: &'static str,
+    pub body: String,
 }
 
 impl HtmlResponse {
@@ -63,7 +63,7 @@ impl HtmlResponse {
                     title: "jacobmatthe.ws",
                     description: "The blog of Jacob Matthews",
                 },
-                body: "",
+                body: String::new(),
             },
         };
     }

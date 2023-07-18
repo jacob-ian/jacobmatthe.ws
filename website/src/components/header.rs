@@ -3,7 +3,7 @@ pub fn new() -> String {
         r#"
     <header class="flex flex-row justify-center items-center sticky top-0 bg-zinc-900 border-b border-sky-600 text-sky-400">
         <div class="flex-1 flex flex-row items-center justify-start gap-0.5 max-w-5xl">
-            <a class="flex-0 text-md font-extrabold px-5">jacobmatthe.ws</a>
+            <a class="flex-0 text-md px-5">jacobmatthe.ws</a>
             <div class="flex-1"></div>
             <nav class="flex-0 flex flex-row justify-start items-center gap-1.5 divide-x divide-sky-600">
                 {blog}
@@ -19,7 +19,7 @@ pub fn new() -> String {
 
 fn nav_item(href: &'static str, label: &'static str) -> String {
     return format!(
-        r#"<a href="{href}", alt="{label}" class="py-2 px-5 my-5 font-bold text-md transition-colors hover:text-sky-200">{label}</a>"#,
+        r#"<a href="{href}", alt="{label}" class="py-2 px-5 my-5 text-md transition-colors hover:text-sky-200">{label}</a>"#,
         href = href,
         label = label
     );

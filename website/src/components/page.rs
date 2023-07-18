@@ -19,7 +19,7 @@ pub fn from_response(res: &HtmlResponse) -> String {
                 <!-- Fonts -->
                 <link rel="preconnect" href="https://fonts.googleapis.com">
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-                <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Noto+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+                <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,800;1,400&display=swap" rel="stylesheet">
 
                 <!-- Stylesheets -->
                 <script src="https://cdn.tailwindcss.com"></script> <!-- Remove in prod -->
@@ -37,7 +37,7 @@ pub fn from_response(res: &HtmlResponse) -> String {
             <body class="min-h-screen flex flex-col bg-zinc-900 font-mono text-sky-100">
                 {header}
                 <main class="flex flex-row flex-1 justify-center">
-                    <div class="p-10 flex-1 max-w-5xl border-x border-sky-600">
+                    <div class="p-10 flex-1 flex flex-col max-w-5xl border-x border-sky-600">
                         {body}
                     </div>
                 </main>
