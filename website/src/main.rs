@@ -12,6 +12,7 @@ async fn main() -> std::io::Result<()> {
             process::exit(1)
         }
     };
+
     let server = HttpServer::new(move || App::new().configure(pages::config))
         .bind((config.host.clone(), config.port))?
         .run();
