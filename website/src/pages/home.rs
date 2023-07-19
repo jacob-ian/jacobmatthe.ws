@@ -1,24 +1,43 @@
 use actix_web::Responder;
 
-use crate::{components, html::HtmlResponse};
+use crate::html::HtmlResponse;
 
 pub async fn home() -> impl Responder {
     return HtmlResponse::builder()
-        .title("Welcome to Jacob's Blog")
-        .body(format!(
+        .title("Home | jacobmatthe.ws")
+        .body(
             r#"
-        <h1 class="text-4xl font-extrabold mb-10 text-sky-500">Welcome to Jacob's Blog</h1>
-        <p>There is some content here.</p>
-        <p>This is a code block</p>
-        {code}
-        "#,
-            code = components::code::new(
-                r#"
-                pub async fn hi() -> &'static str {
-                    return "hi";
-                }
-                "#
-            ),
-        ))
+            <h1 class="font-extrabold before:content-['$'] before:mr-2 lowercase">Welcome</h1>
+            <br/>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <br />
+            <br />
+            <p>you can read some of my thoughts below:</p>
+            "#
+            .to_string(),
+        )
         .build();
 }

@@ -3,8 +3,8 @@ use chrono::Datelike;
 pub fn new() -> String {
     return format!(
         r#"
-    <footer class="flex flex-row justify-center items-center p-5 text-sm border-t border-sky-600 sticky bottom-0">
-        <div class="flex-1 flex flex-row items-center justify-center gap-0.5 max-w-5xl text-sky-400">
+    <footer class="flex flex-row justify-center items-center text-sm sticky bottom-0 bg-zinc-900">
+        <div class="flex-1 flex flex-row items-center justify-center py-5 max-w-5xl text-sky-400 border-t border-sky-600">
           <p>Copyright © Jacob Ian Matthews {year}</p>
        </div>
     </footer>
