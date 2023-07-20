@@ -1,9 +1,9 @@
 pub fn new() -> String {
     return format!(
         r#"
-    <header class="flex flex-row justify-center sticky top-0 bg-zinc-900 text-sky-400 pt-10">
+    <header class="flex flex-row justify-center bg-zinc-900 text-sky-400 pt-5 sm:pt-10 sm:sticky sm:top-0">
         <div class="flex-1 border-b border-sky-600 relative max-w-5xl">
-            <div class="w-full flex flex-row items-center max-w-5xl px-5 absolute -bottom-3">
+            <div class="px-5 flex flex-col items-center sm:flex-row sm:w-full sm:absolute sm:-bottom-3">
                 <div class="flex-1 flex flex-row justify-start">
                     <a href="/" alt="Home" class="text-md bg-zinc-900 px-1">jacobmatthe.ws</a>
                 </div>

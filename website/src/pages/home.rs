@@ -4,7 +4,7 @@ use crate::html::HtmlResponse;
 
 pub async fn home() -> impl Responder {
     return HtmlResponse::builder()
-        .title("Home | jacobmatthe.ws")
+        .title("Home | Jacob Matthews")
         .body(
             r#"
             <h1 class="font-extrabold before:content-['$'] before:mr-2 lowercase">Welcome</h1>
