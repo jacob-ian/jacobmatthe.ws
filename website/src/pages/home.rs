@@ -33,6 +33,16 @@ pub async fn home() -> impl Responder {
             <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
             <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
             <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
+            <p>you can learn about me and some of my work <a class="text-sky-600 font-bold hover:" href="/about" alt="About">here</a></p>
             <br />
             <br />
             <p>you can read some of my thoughts below:</p>
