@@ -8,6 +8,7 @@ pub async fn about() -> impl Responder {
         .body(article::new(
             r#"
         <h1>About</h1>
+        <p>blah</p>
         "#
             .to_string(),
         ))

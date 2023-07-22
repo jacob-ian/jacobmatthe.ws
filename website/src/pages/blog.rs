@@ -7,9 +7,9 @@ pub async fn blog() -> impl Responder {
         .title("Blog | Jacob Matthews")
         .body(article::new(
             r#"
-        <h1>Blog</h1>
-        <p>Posts go here</p>
-    "#
+            <h1>Blog</h1>
+            <p>Posts go here</p>
+            "#
             .to_string(),
         ))
         .build();
