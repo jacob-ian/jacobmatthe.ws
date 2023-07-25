@@ -4,7 +4,7 @@ use actix_web::{
     HttpResponse, Responder,
 };
 
-use crate::components;
+use crate::components::{self, page};
 
 pub struct HtmlResponseBuilder {
     response: HtmlResponse,
@@ -18,13 +18,13 @@ impl HtmlResponseBuilder {
     }
 
     /// Set the head title
-    pub fn title(&mut self, title: &'static str) -> &mut Self {
+    pub fn title(&mut self, title: String) -> &mut Self {
         self.response.head.title = title;
         return self;
     }
 
     /// Set the meta description
-    pub fn description(&mut self, description: &'static str) -> &mut Self {
+    pub fn description(&mut self, description: String) -> &mut Self {
         self.response.head.description = description;
         return self;
     }
@@ -43,8 +43,8 @@ impl HtmlResponseBuilder {
 
 #[derive(Clone)]
 pub struct Head {
-    pub title: &'static str,
-    pub description: &'static str,
+    pub title: String,
+    pub description: String,
 }
 
 #[derive(Clone)]
@@ -60,8 +60,8 @@ impl HtmlResponse {
             response: HtmlResponse {
                 status: StatusCode::OK,
                 head: Head {
-                    title: "jacobmatthe.ws",
-                    description: "The blog of Jacob Matthews",
+                    title: String::from("jacobmatthe.ws"),
+                    description: String::from("The blog of Jacob Matthews"),
                 },
                 body: String::new(),
             },
@@ -69,12 +69,18 @@ impl HtmlResponse {
     }
 }
 
+impl From<HtmlResponse> for HttpResponse {
+    fn from(value: HtmlResponse) -> Self {
+        return HttpResponse::build(value.status)
+            .content_type(ContentType::html())
+            .body(page::from_response(&value));
+    }
+}
+
 impl Responder for HtmlResponse {
     type Body = BoxBody;
 
     fn respond_to(self, _: &actix_web::HttpRequest) -> actix_web::HttpResponse<Self::Body> {
-        return HttpResponse::build(self.status)
-            .content_type(ContentType::html())
-            .body(components::page::from_response(&self));
+        return self.into();
     }
 }
