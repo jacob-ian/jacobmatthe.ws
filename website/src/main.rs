@@ -1,7 +1,7 @@
 use std::process;
 
-use actix_web::{App, HttpServer};
-use website::{config::Config, pages};
+use actix_web::{web, App, HttpServer};
+use website::{cms, config::Config, pages};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -13,9 +13,23 @@ async fn main() -> std::io::Result<()> {
         }
     };
 
-    let server = HttpServer::new(move || App::new().configure(pages::config))
-        .bind((config.host.clone(), config.port))?
-        .run();
+    let app_config = web::Data::new(config.clone());
+    let cms_client = match cms::Client::from_config(&config) {
+        Ok(v) => v,
+        Err(e) => {
+            eprintln!("Could not connect to backend: {}", e);
+            process::exit(1)
+        }
+    };
+    let cms_client = web::Data::new(cms_client);
+    let server = HttpServer::new(move || {
+        App::new()
+            .app_data(web::Data::clone(&app_config))
+            .app_data(web::Data::clone(&cms_client))
+            .configure(pages::config)
+    })
+    .bind((config.host.clone(), config.port))?
+    .run();
 
     println!("\n-------\n\nSuccessfully started jacobmatthe.ws!\n");
     println!("Listening on {}:{}\n\n-------", config.host, config.port);
