@@ -2,10 +2,7 @@ use std::fmt::Display;
 
 use actix_web::{body::BoxBody, http, ResponseError};
 
-use crate::{
-    components::{article, error},
-    html::HtmlResponse,
-};
+use crate::{components::error, html::HtmlResponse};
 
 #[derive(Debug, Clone)]
 pub enum Error {
