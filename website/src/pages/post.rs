@@ -23,16 +23,7 @@ pub async fn post(
 
     return Ok(HtmlResponse::builder()
         .title(format!("{} | Jacob Matthews", post.title))
-        .description(String::from("This is a post"))
-        .body(article::new(
-            format!(
-                r#"
-            <h1>{title}</h1>
-            <p>This is some content</p>
-            "#,
-                title = post.title
-            )
-            .to_string(),
-        ))
+        .description(post.description)
+        .body(article::new(post.content))
         .build());
 }
