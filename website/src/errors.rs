@@ -23,8 +23,12 @@ impl Error {
 
     pub fn body(&self) -> String {
         let content = match self {
-            Self::NotFound(_) => String::from("<p>Sorry, that page couldn't be found.</p><p>Are you sure you have the right address?</p>"),
-            _ => String::from("Hi"),
+            Self::NotFound(_) => String::from(
+                r#"<p>Sorry, I couldn't find that page.</p><p>Are you sure you have the right address?</p>"#,
+            ),
+            _ => String::from(
+                r#"<p>Sorry, something went wrong.</p><p>If you've seen this a few times, feel free to send me an <a class="text-sky-400 font-bold" href="mailto:jacob@jacobmatthe.ws">email</a>.</p>"#,
+            ),
         };
         return error::render(self.title(), content);
     }
