@@ -4,7 +4,7 @@ use crate::{components::article, html::HtmlResponse};
 
 pub async fn blog() -> impl Responder {
     return HtmlResponse::builder()
-        .title("Blog | Jacob Matthews")
+        .title(String::from("Blog | Jacob Matthews"))
         .body(article::new(
             r#"
             <h1>Blog</h1>

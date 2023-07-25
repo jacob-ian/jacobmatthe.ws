@@ -7,10 +7,11 @@ use std::{
 use serde::Deserialize;
 use toml;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub struct Config {
     pub host: String,
     pub port: u16,
+    pub backend_uri: String,
 }
 
 impl Config {
