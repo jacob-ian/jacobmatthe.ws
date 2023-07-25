@@ -7,7 +7,7 @@ use crate::{
     html::HtmlResponse,
 };
 
-pub async fn get_post_by_stub(client: &Client, stub: &str) -> Result<Post, Error> {
+async fn get_post_by_stub(client: &Client, stub: &str) -> Result<Post, Error> {
     return client
         .get()
         .path(format!("posts/{}", stub))
