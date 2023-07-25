@@ -4,7 +4,7 @@ use actix_web::{
     HttpResponse, Responder,
 };
 
-use crate::components::{self, page};
+use crate::components::page;
 
 pub struct HtmlResponseBuilder {
     response: HtmlResponse,
