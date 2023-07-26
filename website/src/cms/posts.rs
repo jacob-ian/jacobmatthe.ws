@@ -12,5 +12,5 @@ pub struct Post {
     pub content: String,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
-    pub published_at: Option<DateTime<Utc>>,
+    pub published_at: DateTime<Utc>,
 }

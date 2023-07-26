@@ -24,6 +24,12 @@ pub async fn post(
     return Ok(HtmlResponse::builder()
         .title(format!("{} | Jacob Matthews", post.title))
         .description(post.description)
-        .body(article::new(post.content))
+        .body(
+            article::builder()
+                .title(post.title)
+                .published_at(Some(post.published_at))
+                .content(post.content)
+                .render(),
+        )
         .build());
 }

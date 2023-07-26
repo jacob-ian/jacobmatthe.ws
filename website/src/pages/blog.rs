@@ -5,12 +5,16 @@ use crate::{components::article, html::HtmlResponse};
 pub async fn blog() -> impl Responder {
     return HtmlResponse::builder()
         .title(String::from("Blog | Jacob Matthews"))
-        .body(article::new(
-            r#"
-            <h1>Blog</h1>
-            <p>Posts go here</p>
-            "#
-            .to_string(),
-        ))
+        .body(
+            article::builder()
+                .title(String::from("Blog"))
+                .content(
+                    r#"
+<p>Posts go here</p>
+                    "#
+                    .to_string(),
+                )
+                .render(),
+        )
         .build();
 }

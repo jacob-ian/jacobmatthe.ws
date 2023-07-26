@@ -4,6 +4,7 @@ use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 use crate::{config::Config, errors::Error};
 pub mod posts;
+pub mod users;
 
 #[allow(dead_code)]
 #[derive(Deserialize)]
