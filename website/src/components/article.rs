@@ -1,4 +1,4 @@
-use chrono::{DateTime, Datelike, Utc};
+use chrono::{DateTime, Utc};
 
 pub struct ArticleBuilder {
     title: String,
