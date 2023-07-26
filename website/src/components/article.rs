@@ -1,5 +1,7 @@
 use chrono::{DateTime, Utc};
 
+use super::title;
+
 pub struct ArticleBuilder {
     title: String,
     content: String,
@@ -48,12 +50,12 @@ impl ArticleBuilder {
     prose-img:max-h-80 
     prose-pre:bg-transparent prose-pre:p-0 prose-pre:rounded-none
     prose-code:p-5 prose-code:bg-zinc-800 prose-code:border prose-code:border-sky-600 prose-code:before:content-[] prose-code:after:content-[]">
-    <h1 class="font-extrabold lowercase text-base before:content-['$'] before:mr-2">{title}</h1>
+    {title}
     {pubdate}
     {content}
 </article>
             "#,
-            title = self.title,
+            title = title::render(&self.title),
             pubdate = self.render_pubdate(),
             content = self.content
         );
