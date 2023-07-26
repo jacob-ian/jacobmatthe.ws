@@ -27,7 +27,6 @@ pub fn from_response(res: &HtmlResponse) -> String {
                     tailwind.config = {{
                       theme: {{
                         fontFamily: {{
-                          serif: ['Noto Serif', 'serif'],
                           mono: ['JetBrains Mono', 'mono']
                         }},
                       }},
