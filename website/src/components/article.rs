@@ -39,9 +39,13 @@ impl ArticleBuilder {
     pub fn render(&self) -> String {
         return format!(
             r#"
-<article class="flex-1 flex min-w-full flex-col prose prose-invert 
+<article class="flex-1 min-w-full prose prose-invert 
     prose-headings:text-sky-100
     prose-p:text-sky-100
+    prose-figure:flex prose-figure:flex-col prose-figure:items-center
+    prose-figure:w-auto
+    prose-figure:p-5 prose-figure:bg-zinc-800 prose-figure:border prose-figure:border-sky-600
+    prose-img:max-h-80 
     prose-pre:bg-transparent prose-pre:p-0 prose-pre:rounded-none
     prose-code:p-5 prose-code:bg-zinc-800 prose-code:border prose-code:border-sky-600 prose-code:before:content-[] prose-code:after:content-[]">
     <h1 class="font-extrabold lowercase text-base before:content-['$'] before:mr-2">{title}</h1>
