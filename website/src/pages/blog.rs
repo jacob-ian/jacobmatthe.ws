@@ -21,7 +21,7 @@ pub async fn blog(client: web::Data<Client>) -> Result<HtmlResponse, Error> {
         .into_iter()
         .map(|p| {
             format!(
-                r#"<a href="/{stub}">{name}</a>"#,
+                r#"<a href="/{stub}">> {name}</a>"#,
                 stub = p.stub,
                 name = p.title
             )
@@ -35,7 +35,7 @@ pub async fn blog(client: web::Data<Client>) -> Result<HtmlResponse, Error> {
         .body(format!(
             r#"
             {title}
-            <h2 class="my-5 pb-2 border-b border-sky-600">Latest</h2>
+            <h2 class="my-5">Latest Posts:</h2>
             {posts}
             "#,
             title = title::render("Blog"),
