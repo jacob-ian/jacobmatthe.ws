@@ -1,4 +1,4 @@
-pub fn new() -> String {
+pub fn render() -> String {
     return format!(
         r#"
         <header class="flex flex-row justify-center bg-zinc-900 text-sky-400 pt-5 sm:pt-10 sm:sticky sm:top-0">

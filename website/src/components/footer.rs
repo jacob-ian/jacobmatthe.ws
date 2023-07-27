@@ -1,6 +1,6 @@
 use chrono::Datelike;
 
-pub fn new() -> String {
+pub fn render() -> String {
     return format!(
         r#"
     <footer class="flex flex-row justify-center items-center text-sm sticky bottom-0 bg-zinc-900">

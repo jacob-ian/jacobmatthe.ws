@@ -4,8 +4,6 @@ use super::{footer, header};
 
 /// Returns a completed HTML page template from an HtmlResponse
 pub fn from_response(res: &HtmlResponse) -> String {
-    let header = header::new();
-    let footer = footer::new();
     return format!(
         r#"
         <!DOCTYPE html>
@@ -49,8 +47,8 @@ pub fn from_response(res: &HtmlResponse) -> String {
         "#,
         title = res.head.title,
         description = res.head.description,
-        header = header,
+        header = header::render(),
         body = res.body,
-        footer = footer
+        footer = footer::render()
     );
 }
