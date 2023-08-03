@@ -1,5 +1,6 @@
 use actix_web::web;
 use chrono::{DateTime, Utc};
+use serde::Serialize;
 
 use crate::{
     cms::{posts::Post, Client},
@@ -8,16 +9,22 @@ use crate::{
     html::HtmlResponse,
 };
 
-async fn get_posts(client: &Client) -> Result<Vec<Post>, Error> {
+#[derive(Serialize)]
+struct LatestPostsParams {
+    limit: i64,
+}
+
+async fn get_latest_posts(client: &Client) -> Result<Vec<Post>, Error> {
     return client
         .get()
         .path(String::from("posts"))
+        .query(LatestPostsParams { limit: 5 })?
         .json::<Vec<Post>>()
         .await;
 }
 
 pub async fn blog(client: web::Data<Client>) -> Result<HtmlResponse, Error> {
-    let posts = get_posts(&client)
+    let posts = get_latest_posts(&client)
         .await?
         .into_iter()
         .map(|p| {
