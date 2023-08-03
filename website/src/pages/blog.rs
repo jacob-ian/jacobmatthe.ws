@@ -1,4 +1,5 @@
 use actix_web::web;
+use chrono::{DateTime, Utc};
 
 use crate::{
     cms::{posts::Post, Client},
@@ -21,9 +22,16 @@ pub async fn blog(client: web::Data<Client>) -> Result<HtmlResponse, Error> {
         .into_iter()
         .map(|p| {
             format!(
-                r#"<a href="/{stub}">> {name}</a>"#,
+                r#"
+                <a class="text-sky-300 before:content-['>'] before:mr-2 flex flex-row" href="/{stub}">
+                    <div>{name}</div>
+                    <div class="flex-1"></div>
+                    <div class="text-sky-300">{date}</div>
+                </a>
+                "#,
                 stub = p.stub,
-                name = p.title
+                name = p.title,
+                date = format_time_ago(p.published_at)
             )
         })
         .collect::<Vec<String>>()
@@ -42,4 +50,26 @@ pub async fn blog(client: web::Data<Client>) -> Result<HtmlResponse, Error> {
             posts = posts
         ))
         .build());
+}
+
+fn format_time_ago(date: DateTime<Utc>) -> String {
+    let duration = Utc::now().signed_duration_since(date);
+
+    if duration.num_days() > 1 {
+        return format!("{} days ago", duration.num_days());
+    }
+
+    if duration.num_days() == 1 {
+        return String::from("Yesterday");
+    }
+
+    if duration.num_hours() >= 1 {
+        let mut plural = String::new();
+        if duration.num_hours() > 1 {
+            plural = String::from("s");
+        }
+        return format!("{} hour{} ago", duration.num_hours(), plural);
+    }
+
+    return String::from("Under an hour ago");
 }
