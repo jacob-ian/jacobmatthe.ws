@@ -13,7 +13,7 @@ pub fn render() -> String {
                         {about}
                     </nav>
                     <div class="flex-1 flex flex-row justify-end">
-                        <button class="bg-zinc-900 px-1" alt="Search">Search</button>
+                        <!--<button class="bg-zinc-900 px-1" alt="Search">Search</button>-->
                     </div>
                 </div>
             </div>
