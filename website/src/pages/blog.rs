@@ -50,11 +50,14 @@ pub async fn blog(client: web::Data<Client>) -> Result<HtmlResponse, Error> {
         .body(format!(
             r#"
             {title}
-            <h2 class="my-5">Latest Posts:</h2>
-            {posts}
+            <h2 class="my-5 text-lg">Latest Posts:</h2>
+            {latest}
+            <h2 class="my-5 text-lg">All Posts:</h2>
+            {all}
             "#,
             title = title::render("Blog"),
-            posts = posts
+            latest = posts,
+            all = "hi"
         ))
         .build());
 }
