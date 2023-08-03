@@ -30,10 +30,10 @@ pub async fn blog(client: web::Data<Client>) -> Result<HtmlResponse, Error> {
         .map(|p| {
             format!(
                 r#"
-                <a class="text-sky-300 before:content-['>'] before:mr-2 flex flex-row" href="/{stub}">
+                <a class="text-sky-300 before:content-['>'] before:mr-2 flex flex-row mb-1 transition-colors hover:text-sky-100" href="/{stub}">
                     <div>{name}</div>
                     <div class="flex-1"></div>
-                    <div class="text-sky-300">{date}</div>
+                    <div>{date}</div>
                 </a>
                 "#,
                 stub = p.stub,
