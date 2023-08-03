@@ -1,6 +1,7 @@
 use actix_web::http;
 use reqwest::{self, StatusCode};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
+use serde_qs;
 
 use crate::{config::Config, errors::Error};
 pub mod posts;
@@ -41,6 +42,7 @@ impl Client {
                 path: String::new(),
                 method: http::Method::GET,
                 body: None,
+                params: None,
             },
         };
     }
@@ -53,6 +55,7 @@ impl Client {
                 path: String::new(),
                 method: http::Method::POST,
                 body: None,
+                params: None,
             },
         };
     }
@@ -65,6 +68,7 @@ impl Client {
                 path: String::new(),
                 method: http::Method::PATCH,
                 body: None,
+                params: None,
             },
         };
     }
@@ -77,6 +81,7 @@ impl Client {
                 path: String::new(),
                 method: http::Method::PUT,
                 body: None,
+                params: None,
             },
         };
     }
@@ -89,6 +94,7 @@ impl Client {
                 path: String::new(),
                 method: http::Method::DELETE,
                 body: None,
+                params: None,
             },
         };
     }
@@ -99,6 +105,7 @@ pub struct ClientRequest {
     path: String,
     method: reqwest::Method,
     body: Option<String>,
+    params: Option<String>,
 }
 
 pub struct ClientRequestBuilder {
@@ -110,6 +117,16 @@ impl ClientRequestBuilder {
     pub fn path(&mut self, path: String) -> &mut Self {
         self.request.path = path;
         return self;
+    }
+
+    /// Set the query params
+    pub fn query<Q>(&mut self, params: Q) -> Result<&mut Self, Error>
+    where
+        Q: Serialize,
+    {
+        let params = serde_qs::to_string(&params).map_err(|e| Error::Internal(e.to_string()))?;
+        self.request.params = Some(params);
+        return Ok(self);
     }
 
     /// Set the JSON body of the request
@@ -128,10 +145,17 @@ impl ClientRequestBuilder {
     where
         T: DeserializeOwned,
     {
-        let mut req = self.request.client.reqwest.request(
-            self.request.method.clone(),
-            format!("{}/{}", self.request.client.host_url, self.request.path),
-        );
+        let mut url = format!("{}/{}", self.request.client.host_url, self.request.path);
+
+        if let Some(params) = &self.request.params {
+            url = format!("{}?{}", url, params);
+        }
+
+        let mut req = self
+            .request
+            .client
+            .reqwest
+            .request(self.request.method.clone(), url);
 
         if let Some(body) = &self.request.body {
             req = req
