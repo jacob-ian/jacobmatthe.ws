@@ -37,7 +37,7 @@ pub struct UpdatePost {
 }
 
 /// Gets all published posts
-pub async fn get_posts(pool: &PgPool) -> Result<Vec<Post>, errors::Error> {
+pub async fn get_posts(pool: &PgPool, limit: Option<i64>) -> Result<Vec<Post>, errors::Error> {
     sqlx::query_as!(
         Post,
         "
@@ -46,8 +46,10 @@ pub async fn get_posts(pool: &PgPool) -> Result<Vec<Post>, errors::Error> {
             WHERE 
                 deleted_at IS NULL
                 AND published_at IS NOT NULL
-            ORDER BY published_at DESC;
+            ORDER BY published_at DESC
+            LIMIT $1;
         ",
+        limit
     )
     .fetch_all(pool)
     .await

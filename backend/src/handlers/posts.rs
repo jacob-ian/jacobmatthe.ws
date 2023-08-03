@@ -1,11 +1,20 @@
 use actix_web::{web, HttpResponse};
+use serde::Deserialize;
 use sqlx::PgPool;
 
 use crate::{db, errors};
 
+#[derive(Deserialize)]
+pub struct GetPostsFilter {
+    limit: Option<i64>,
+}
+
 /// Gets published posts
-async fn get_posts(pool: web::Data<PgPool>) -> Result<HttpResponse, errors::Error> {
-    let posts = db::posts::get_posts(&pool).await?;
+async fn get_posts(
+    pool: web::Data<PgPool>,
+    query: web::Query<GetPostsFilter>,
+) -> Result<HttpResponse, errors::Error> {
+    let posts = db::posts::get_posts(&pool, query.limit).await?;
     Ok(HttpResponse::Ok().json(posts))
 }
 
