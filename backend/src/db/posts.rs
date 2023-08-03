@@ -46,7 +46,7 @@ pub async fn get_posts(pool: &PgPool) -> Result<Vec<Post>, errors::Error> {
             WHERE 
                 deleted_at IS NULL
                 AND published_at IS NOT NULL
-            ORDER BY created_at DESC;
+            ORDER BY published_at DESC;
         ",
     )
     .fetch_all(pool)
