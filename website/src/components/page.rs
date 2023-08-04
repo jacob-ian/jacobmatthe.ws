@@ -33,6 +33,7 @@ pub fn from_response(res: &HtmlResponse) -> String {
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/tokyo-night-dark.min.css">
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
                 <script>hljs.highlightAll();</script>
+                <script src="https://unpkg.com/hyperscript.org@0.9.9"></script>
             </head>
             <body class="min-h-screen flex flex-col bg-zinc-900 font-mono text-sky-100">
                 {header}
