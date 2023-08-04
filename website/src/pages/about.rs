@@ -10,7 +10,7 @@ pub async fn about() -> Result<HtmlResponse, Error> {
                 .content(String::from(
                     r#"
                 <p>This is something about me</p>
-                "#,
+                    "#,
                 ))
                 .render(),
         )
