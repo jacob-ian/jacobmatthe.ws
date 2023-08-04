@@ -18,7 +18,7 @@ async fn get_latest_posts(client: &Client) -> Result<Vec<Post>, Error> {
     return client
         .get()
         .path(String::from("posts"))
-        .query(LatestPostsParams { limit: 5 })?
+        .query(LatestPostsParams { limit: 10 })?
         .json::<Vec<Post>>()
         .await;
 }
