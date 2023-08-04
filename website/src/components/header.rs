@@ -52,7 +52,7 @@ struct NavItem {
 
 fn nav_item(item: NavItem) -> String {
     return format!(
-        r#"<a id="{id}" href="{href}" alt="{label}" class="bg-zinc-900 px-1 transition-colors text-md hover:text-sky-100">{label}</a>"#,
+        r#"<a id="{id}" href="{href}" alt="{label}" class="bg-zinc-900 px-1 text-md hover:text-sky-100">{label}</a>"#,
         id = item.id,
         href = item.href,
         label = item.label,
