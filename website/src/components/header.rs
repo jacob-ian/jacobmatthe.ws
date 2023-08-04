@@ -7,14 +7,7 @@ pub fn render() -> String {
                     <div class="flex-1 flex flex-row justify-start">
                         <a href="/" alt="Home" class="text-md bg-zinc-900 px-1">jacobmatthe.ws</a>
                     </div>
-                    <nav _="init
-                        if ['/', '/about'] does not contain the pathname of the location of the window 
-                            add .text-sky-100 to #nav-blog
-                        else 
-                            remove .text-sky-100 from #nav-blog
-                        end
-                    "
-                    class="flex-1 flex flex-row justify-center items-center gap-5">
+                    <nav class="flex-1 flex flex-row justify-center items-center gap-5">
                         {home}
                         {blog}
                         {about}
@@ -30,19 +23,19 @@ pub fn render() -> String {
             href: "/",
             label: "Home",
             id: "nav-home",
-            highlight_on_path: true
+            highlight_condition: "'/' is"
         }),
         blog = nav_item(NavItem {
             href: "/blog",
             label: "Blog",
             id: "nav-blog",
-            highlight_on_path: false
+            highlight_condition: "['/', '/about'] does not contain"
         }),
         about = nav_item(NavItem {
             href: "/about",
             label: "About",
             id: "nav-about",
-            highlight_on_path: true
+            highlight_condition: "'/about' is"
         })
     );
 }
@@ -51,29 +44,20 @@ struct NavItem {
     href: &'static str,
     label: &'static str,
     id: &'static str,
-    highlight_on_path: bool,
+    highlight_condition: &'static str,
 }
 
 fn nav_item(item: NavItem) -> String {
-    let mut highlight_script = String::new();
-
-    if item.highlight_on_path {
-        highlight_script = format!(
-            r#"_="init 
-            if the pathname of the location of the window is '{href}' 
+    return format!(
+        r#"<a _="init 
+            if {condition} the pathname of the location of the window 
                 add .text-sky-100 to me
             else 
                 remove .text-sky-100 
-            end""#,
-            href = &item.href
-        );
-    }
-
-    return format!(
-        r#"<a {highlight} id="{id}" href="{href}" alt="{label}" class="bg-zinc-900 px-1 text-md hover:text-sky-100">{label}</a>"#,
+            end" id="{id}" href="{href}" alt="{label}" class="bg-zinc-900 px-1 text-md hover:text-sky-100">{label}</a>"#,
         id = item.id,
         href = item.href,
         label = item.label,
-        highlight = highlight_script
+        condition = item.highlight_condition
     );
 }
