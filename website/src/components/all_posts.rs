@@ -15,7 +15,7 @@ pub async fn render(client: &Client) -> Result<String, Error> {
             return format!(
                 r#"
                 <details>
-                    <summary>{year}</summary>
+                    <summary class="cursor-pointer">{year}</summary>
                     <div class="flex flex-col px-5 py-2">
                         {months}
                     </div>
@@ -28,8 +28,8 @@ pub async fn render(client: &Client) -> Result<String, Error> {
                         return format!(
                             r#"
                             <details>
-                                <summary>{month}</summary>
-                                <ul class="flex flex-col px-5 py-2 gap-2">
+                                <summary class="cursor-pointer">{month}</summary>
+                                <ul class="flex flex-col px-5 py-2 gap-2 list-[square]">
                                     {posts}
                                 </ul>
                             </details>
@@ -40,7 +40,7 @@ pub async fn render(client: &Client) -> Result<String, Error> {
                                 .map(|post| {
                                     return format!(
                                         r#"
-                                        <li><a class="flex-1" href="/{href}">{name}</a></li>
+                                        <li><a class="flex-1 text-sky-300 transition-colors hover:text-sky-100" href="/{href}">{name}</a></li>
                                         "#,
                                         href = post.stub,
                                         name = post.title
