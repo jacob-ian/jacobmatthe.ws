@@ -1,3 +1,4 @@
+pub mod all_posts;
 pub mod article;
 pub mod error;
 mod footer;
