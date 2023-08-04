@@ -9,11 +9,11 @@ pub fn render() -> String {
                     </div>
                     <nav _="init
                         if the pathname of the location of the window is '/'
-                            add .text-sky-200 to #nav-home
+                            add .text-sky-100 to #nav-home
                         else if the pathname of the location of the window is '/about'
-                            add .text-sky-200 to #nav-about
+                            add .text-sky-100 to #nav-about
                         else
-                            add .text-sky-200 to #nav-blog
+                            add .text-sky-100 to #nav-blog
                         end" class="flex-1 flex flex-row justify-center items-center gap-5">
                         {home}
                         {blog}
