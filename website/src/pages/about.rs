@@ -1,29 +1,17 @@
-use actix_web::web;
+use crate::{components::article, errors::Error, html::HtmlResponse};
 
-use crate::{
-    cms::{posts::Post, Client},
-    components::article,
-    errors::Error,
-    html::HtmlResponse,
-};
-
-async fn get_about_page(client: &Client) -> Result<Post, Error> {
-    return client
-        .get()
-        .path(String::from("posts/about"))
-        .json::<Post>()
-        .await;
-}
-
-pub async fn about(client: web::Data<Client>) -> Result<HtmlResponse, Error> {
-    let about = get_about_page(&client).await?;
+// TODO: This needs to be a Page type in the CMS
+pub async fn about() -> Result<HtmlResponse, Error> {
     return Ok(HtmlResponse::builder()
         .title(String::from("About | Jacob Matthews"))
-        .description(about.description)
         .body(
             article::builder()
-                .title(about.title)
-                .content(about.content)
+                .title(String::from("About"))
+                .content(String::from(
+                    r#"
+                <p>This is something about me</p>
+                "#,
+                ))
                 .render(),
         )
         .build());
