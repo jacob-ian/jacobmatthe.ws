@@ -51,9 +51,9 @@ fn nav_item(item: NavItem) -> String {
     return format!(
         r#"<a _="init 
             if {condition} the pathname of the location of the window 
-                add .text-sky-100 to me
+                add .text-sky-200 to me
             else 
-                remove .text-sky-100 
+                remove .text-sky-200 
             end" id="{id}" href="{href}" alt="{label}" class="bg-zinc-900 px-1 text-md hover:text-sky-100">{label}</a>"#,
         id = item.id,
         href = item.href,
