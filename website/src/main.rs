@@ -1,7 +1,7 @@
 use std::process;
 
 use actix_web::{web, App, HttpServer};
-use website::{cms, config::Config, pages};
+use website::{cms, config::Config, files, pages};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -27,6 +27,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::clone(&app_config))
             .app_data(web::Data::clone(&cms_client))
             .configure(pages::config)
+            .configure(files::config)
     })
     .bind((config.host.clone(), config.port))?
     .run();
