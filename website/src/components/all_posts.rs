@@ -84,7 +84,6 @@ fn group_by_year_month(posts: Vec<Post>) -> HashMap<i32, HashMap<String, Vec<Pos
         let year_group = map.entry(year).or_insert(HashMap::new());
         let month_group = year_group.entry(month).or_insert(Vec::new());
         month_group.push(post);
-        month_group.sort_by(|a, b| b.published_at.cmp(&a.published_at));
     }
     return map;
 }
