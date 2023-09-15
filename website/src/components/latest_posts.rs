@@ -7,8 +7,12 @@ use crate::{
 };
 
 pub async fn render(client: &Client) -> Result<String, Error> {
-    let posts = get_latest_posts(&client)
-        .await?
+    let posts = get_latest_posts(&client).await?;
+
+    let mut list = String::from("<p><em>There's nothing here just yet, but stay tuned!</em></p>");
+
+    if posts.len() > 0 {
+        list = posts
         .into_iter()
         .map(|p| {
             format!(
@@ -27,13 +31,14 @@ pub async fn render(client: &Client) -> Result<String, Error> {
         .collect::<Vec<String>>()
         .join("\n")
         .to_string();
+    }
 
     return Ok(format!(
         r#"
         <h2 id="latest" class="my-5 text-lg">Latest Posts:</h2>
         {posts}
         "#,
-        posts = posts
+        posts = list
     ));
 }
 
