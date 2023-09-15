@@ -41,7 +41,7 @@ impl ArticleBuilder {
     pub fn render(&self) -> String {
         return format!(
             r#"
-<article class="flex-1 min-w-full prose prose-invert 
+<article class="min-w-full prose prose-invert 
     prose-headings:text-sky-100
     prose-p:text-sky-100
     prose-figure:flex prose-figure:flex-col prose-figure:items-center

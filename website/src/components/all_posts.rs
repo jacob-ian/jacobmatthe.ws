@@ -14,7 +14,7 @@ pub async fn render(client: &Client) -> Result<String, Error> {
         .map(|(y, m)| {
             return format!(
                 r#"
-                <details>
+                <details open>
                     <summary class="cursor-pointer">{year}</summary>
                     <div class="flex flex-col px-5 py-2">
                         {months}
