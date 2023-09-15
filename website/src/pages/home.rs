@@ -27,7 +27,7 @@ pub async fn home(client: web::Data<Client>) -> Result<HtmlResponse, Error> {
                 <h2 class="text-center mt-5 mb-10">Welcome to my website!</h2>
                 <p>My name is Jacob and I like to make things, including software. On this website you can read what I think about software, business, and some of the more important things.</p> 
                 <div class="mt-10"></div>
-                <p>To learn a little more about me, <a href="/about">see my <em>about me</em> page.</a></p>
+                <p>To learn a little more about me, <a href="/about">see my <em>about</em> page.</a></p>
                 <div class="mt-10"></div>
                 <p>If you'd like to see what I'm currently working on, you can <a href="/now">visit my <em>now</em> page.</a></p>
                 <div class="mt-10"></div>
