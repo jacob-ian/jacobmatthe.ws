@@ -59,6 +59,10 @@ async fn get_latest_posts(client: &Client) -> Result<Vec<Post>, Error> {
 fn format_time_ago(date: DateTime<Utc>) -> String {
     let duration = Utc::now().signed_duration_since(date);
 
+    if duration.num_weeks() > 1 {
+        return format!("{} weeks ago", duration.num_weeks());
+    }
+
     if duration.num_days() > 1 {
         return format!("{} days ago", duration.num_days());
     }
