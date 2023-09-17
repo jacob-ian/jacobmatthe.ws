@@ -44,8 +44,11 @@ fn group_by_year_month(posts: Vec<Post>) -> HashMap<i32, HashMap<String, Vec<Pos
 }
 
 fn render_collapsable_list(posts: HashMap<i32, HashMap<String, Vec<Post>>>) -> String {
-    return posts
-        .into_iter()
+    let iter = posts.into_iter();
+    if iter.len() == 0 {
+        return String::from("<p>There's nothing here just yet, but stay tuned!</p>")
+    }
+    return iter 
         .map(|(y, m)| {
             return format!(
                 r#"
