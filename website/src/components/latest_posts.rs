@@ -35,7 +35,7 @@ pub async fn render(client: &Client) -> Result<String, Error> {
 
     return Ok(format!(
         r#"
-        <h2 id="latest" class="my-5 text-lg">Latest Posts:</h2>
+        <h2 id="latest" class="my-5 text-2xl font-bold">Latest Posts:</h2>
         {posts}
         "#,
         posts = list
