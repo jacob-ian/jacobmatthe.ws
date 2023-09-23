@@ -7,7 +7,7 @@ use crate::{
 
 pub async fn render(client: &Client) -> Result<String, Error> {
     let posts = get_all_posts(client).await?;
-    let list = render_year_month_list(posts);
+    let list = render_year_month_list(posts)?;
 
     return Ok(format!(
         r#"
@@ -27,9 +27,11 @@ async fn get_all_posts(client: &Client) -> Result<Vec<Post>, Error> {
         .await;
 }
 
-fn render_year_month_list(mut posts: Vec<Post>) -> String {
+fn render_year_month_list(mut posts: Vec<Post>) -> Result<String, Error> {
     if posts.len() == 0 {
-        return String::from("<p>There's nothing here just yet, but stay tuned!</p>");
+        return Ok(String::from(
+            "<p>There's nothing here just yet, but stay tuned!</p>",
+        ));
     }
     posts.sort_by(|a, b| b.published_at.cmp(&a.published_at));
 
@@ -56,13 +58,15 @@ fn render_year_month_list(mut posts: Vec<Post>) -> String {
             continue;
         }
 
-        let months = groups.get_mut(year).unwrap();
+        let months = groups
+            .get_mut(year)
+            .ok_or(Error::Internal(String::from("Could not get all posts")))?;
         let month = months.len() - 1;
         months[month].push(cur);
         i += 1;
     }
 
-    return groups.into_iter().map(|y| {
+    return Ok(groups.into_iter().map(|y| {
         return format!(
             r#"
             <details open>
@@ -96,5 +100,5 @@ fn render_year_month_list(mut posts: Vec<Post>) -> String {
                 );
             }).collect::<Vec<String>>().join("\n")
         )
-    }).collect::<Vec<String>>().join("\n");
+    }).collect::<Vec<String>>().join("\n"));
 }
