@@ -79,7 +79,7 @@ fn render_year_month_list(mut posts: Vec<Post>) -> Result<String, Error> {
             year = y[0][0].published_at.year(),
             months = y.into_iter().map(|m| {
                 return format!(
-                    r#"
+                            r#"
                             <details open class="mb-1">
                                 <summary class="cursor-pointer">{month}</summary>
                                 <ul class="flex flex-col px-5 py-2 gap-2 list-[square]">
