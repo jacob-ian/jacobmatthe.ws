@@ -91,9 +91,9 @@ fn render_year_month_list(mut posts: Vec<Post>) -> Result<String, Error> {
                     p = m.into_iter().map(|post| {
                                 return format!(
                                     r#"
-                                    <li><a class="flex-1 text-sky-300 transition-colors hover:text-sky-100" href="/{href}">{name}</a></li>
+                                    <li><a class="flex-1 text-sky-300 transition-colors hover:text-sky-100" href="/{stub}">{name}</a></li>
                                     "#,
-                                    href = post.stub,
+                                    stub = post.stub,
                                     name = post.title
                                 );
                     }).collect::<Vec<String>>().join("\n")
