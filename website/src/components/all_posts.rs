@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use chrono::Datelike;
 
 use crate::{
@@ -9,8 +7,7 @@ use crate::{
 
 pub async fn render(client: &Client) -> Result<String, Error> {
     let posts = get_all_posts(client).await?;
-    let grouped = group_by_year_month(posts);
-    let list = render_collapsable_list(grouped);
+    let list = render_year_month_list(posts);
 
     return Ok(format!(
         r#"
@@ -30,68 +27,74 @@ async fn get_all_posts(client: &Client) -> Result<Vec<Post>, Error> {
         .await;
 }
 
-fn group_by_year_month(posts: Vec<Post>) -> HashMap<i32, HashMap<String, Vec<Post>>> {
-    let mut map: HashMap<i32, HashMap<String, Vec<Post>>> = HashMap::new();
-    for post in posts {
-        let year = post.published_at.year();
-        let month = post.published_at.format("%B").to_string();
-
-        let year_group = map.entry(year).or_insert(HashMap::new());
-        let month_group = year_group.entry(month).or_insert(Vec::new());
-        month_group.push(post);
+fn render_year_month_list(mut posts: Vec<Post>) -> String {
+    if posts.len() == 0 {
+        return String::from("<p>There's nothing here just yet, but stay tuned!</p>");
     }
-    return map;
-}
+    posts.sort_by(|a, b| b.published_at.cmp(&a.published_at));
 
-fn render_collapsable_list(posts: HashMap<i32, HashMap<String, Vec<Post>>>) -> String {
-    let iter = posts.into_iter();
-    if iter.len() == 0 {
-        return String::from("<p>There's nothing here just yet, but stay tuned!</p>")
+    let mut groups: Vec<Vec<Vec<&Post>>> = Vec::new();
+    let mut i = 0;
+    while i < posts.len() {
+        let cur = &posts[i];
+        if i == 0 {
+            groups.push(vec![vec![cur]]);
+            i += 1;
+            continue;
+        }
+        let prev = &posts[i - 1];
+        if prev.published_at.year() != cur.published_at.year() {
+            groups.push(vec![vec![cur]]);
+            i += 1;
+            continue;
+        }
+
+        let year = &groups.len() - 1;
+        if prev.published_at.month() != cur.published_at.month() {
+            groups[year].push(vec![cur]);
+            i += 1;
+            continue;
+        }
+
+        let months = groups.get_mut(year).unwrap();
+        let month = months.len() - 1;
+        months[month].push(cur);
+        i += 1;
     }
-    return iter 
-        .map(|(y, m)| {
-            return format!(
-                r#"
-                <details open>
-                    <summary class="cursor-pointer">{year}</summary>
-                    <div class="flex flex-col px-5 py-2">
-                        {months}
-                    </div>
-                </details>
-                "#,
-                year = y,
-                months = m
-                    .into_iter()
-                    .map(|(m, p)| {
-                        return format!(
-                            r#"
+
+    return groups.into_iter().map(|y| {
+        return format!(
+            r#"
+            <details open>
+                <summary class="cursor-pointer">{year}</summary>
+                <div class="flex flex-col px-5 py-2">
+                    {months}
+                </div>
+            </details>
+            "#,
+            year = y[0][0].published_at.year(),
+            months = y.into_iter().map(|m| {
+                return format!(
+                    r#"
                             <details open class="mb-1">
                                 <summary class="cursor-pointer">{month}</summary>
                                 <ul class="flex flex-col px-5 py-2 gap-2 list-[square]">
-                                    {posts}
+                                    {p}
                                 </ul>
                             </details>
                             "#,
-                            month = m,
-                            posts = p
-                                .into_iter()
-                                .map(|post| {
-                                    return format!(
-                                        r#"
-                                        <li><a class="flex-1 text-sky-300 transition-colors hover:text-sky-100" href="/{href}">{name}</a></li>
-                                        "#,
-                                        href = post.stub,
-                                        name = post.title
-                                    );
-                                })
-                                .collect::<Vec<String>>()
-                                .join("\n")
-                        );
-                    })
-                    .collect::<Vec<String>>()
-                    .join("\n")
-            );
-        })
-        .collect::<Vec<String>>()
-        .join("\n");
+                    month = m[0].published_at.format("%B"),
+                    p = m.into_iter().map(|post| {
+                                return format!(
+                                    r#"
+                                    <li><a class="flex-1 text-sky-300 transition-colors hover:text-sky-100" href="/{href}">{name}</a></li>
+                                    "#,
+                                    href = post.stub,
+                                    name = post.title
+                                );
+                    }).collect::<Vec<String>>().join("\n")
+                );
+            }).collect::<Vec<String>>().join("\n")
+        )
+    }).collect::<Vec<String>>().join("\n");
 }
