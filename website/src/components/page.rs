@@ -20,16 +20,7 @@ pub fn from_response(res: &HtmlResponse) -> String {
                 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,800;1,400&display=swap" rel="stylesheet">
 
                 <!-- Stylesheets -->
-                <script src="https://cdn.tailwindcss.com?plugins=typography"></script> <!-- Remove in prod -->
-                <script>
-                    tailwind.config = {{
-                      theme: {{
-                        fontFamily: {{
-                          mono: ['JetBrains Mono', 'mono']
-                        }},
-                      }},
-                    }}
-                </script>
+                <link rel="stylesheet" href="/static/tailwind.css">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/tokyo-night-dark.min.css">
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
                 <script>hljs.highlightAll();</script>
