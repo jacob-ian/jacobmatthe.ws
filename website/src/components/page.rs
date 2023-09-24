@@ -21,7 +21,7 @@ pub fn from_response(res: &HtmlResponse) -> String {
 
                 <!-- Stylesheets -->
                 <link rel="stylesheet" href="/static/highlightjs@11.7.0-tokyo-night-dark.min.css">
-                <link rel="stylesheet" href="/static/tailwind.css">
+                <link rel="stylesheet" href="/static/tailwind.min.css">
 
                 <!-- Scripts -->
                 <script src="/static/highlightjs@11.7.0.min.js"></script>
