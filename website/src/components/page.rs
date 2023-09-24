@@ -20,11 +20,13 @@ pub fn from_response(res: &HtmlResponse) -> String {
                 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,800;1,400&display=swap" rel="stylesheet">
 
                 <!-- Stylesheets -->
+                <link rel="stylesheet" href="/static/highlightjs@11.7.0-tokyo-night-dark.min.css">
                 <link rel="stylesheet" href="/static/tailwind.css">
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/tokyo-night-dark.min.css">
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+                <!-- Scripts -->
+                <script src="/static/highlightjs@11.7.0.min.js"></script>
                 <script>hljs.highlightAll();</script>
-                <script src="https://unpkg.com/hyperscript.org@0.9.9"></script>
+                <script src="/static/hyperscript@0.9.9.min.js"></script>
             </head>
             <body class="min-h-screen flex flex-col bg-zinc-900 font-mono text-sky-100">
                 {header}
