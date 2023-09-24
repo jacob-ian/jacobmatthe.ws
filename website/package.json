@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "tailwindcss -i tailwind-input.css -o ./static/tailwind.css"
+    "build": "tailwindcss -i tailwind-input.css -o ./static/tailwind.min.css --minify"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.10",
