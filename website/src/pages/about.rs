@@ -9,7 +9,8 @@ pub async fn about() -> Result<HtmlResponse, Error> {
                 .title(String::from("About"))
                 .content(String::from(
                     r#"
-                <p>This is something about me</p>
+                    <h2>A Short Bio</h2>
+                    <p>I grew up in rural Perth, Western Australia, and moved to Sydney in 2021. I first started programming when I was 10 years old, writing batch scripts on the Primary School computers when I should have been doing assignments.</p>
                     "#,
                 ))
                 .render(),
