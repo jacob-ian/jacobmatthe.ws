@@ -10,14 +10,14 @@ pub fn render() -> String {
                     <nav _="init
                         if the pathname of the location of the window is '/'
                             add .text-sky-100 to #nav-home
-                        else if the pathname of the location of the window is '/about'
-                            add .text-sky-100 to #nav-about
+                        else if the pathname of the location of the window is '/now'
+                            add .text-sky-100 to #nav-now
                         else
                             add .text-sky-100 to #nav-blog
                         end" class="flex-1 flex flex-row justify-center items-center gap-5">
                         {home}
                         {blog}
-                        {about}
+                        {now}
                     </nav>
                     <div class="flex-1 flex flex-row justify-end">
                         <!--<button class="bg-zinc-900 px-1" alt="Search">Search</button>-->
@@ -36,10 +36,10 @@ pub fn render() -> String {
             label: "Blog",
             id: "nav-blog",
         }),
-        about = nav_item(NavItem {
-            href: "/about",
-            label: "About",
-            id: "nav-about",
+        now = nav_item(NavItem {
+            href: "/now",
+            label: "Now",
+            id: "nav-now",
         })
     );
 }
