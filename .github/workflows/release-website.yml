@@ -30,6 +30,5 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./website/target/x86_64-unknown-linux-gnu/release/website
-          asset_name: website_x86_64_linux
           asset_name: ${{ format('website_{}_x86_64_linux', github.ref) }}
           asset_content_type: application/octet-stream
