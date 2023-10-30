@@ -4,6 +4,10 @@ on:
   release: 
     types: [created]
 
+defaults:
+  run:
+    working-directory: /website
+
 jobs:
   build:
     name: Build Backend
@@ -19,11 +23,7 @@ jobs:
           target: x86_64-unknown-linux-gnu
           override: true
       - name: Build backend
-        uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: build
-          args: --release --target x86_64-unknown-linux-gnu
+        run: cargo build --release --target x86_64-unknown-linux-gnu
       - name: Compress backend
         run: tar -czf ./target/release/backend backend_x86_64_linux.tar.gz
       - name: Upload Asset
@@ -32,6 +32,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./backend_x86_64_linux.tar.gz
+          asset_path: ./backend/backend_x86_64_linux.tar.gz
           asset_name: backend_x86_64_linux.tar.gz
           asset_content_type: application/gzip

@@ -4,11 +4,14 @@ on:
   release: 
     types: [created]
 
+defaults:
+  run:
+    working-directory: ./website
+
 jobs:
   build:
     name: Build Website
     runs-on: ubuntu-latest
-    working-directory: ./website
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
@@ -19,11 +22,7 @@ jobs:
           target: x86_64-unknown-linux-gnu
           override: true
       - name: Build website
-        uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: build
-          args: --release --target x86_64-unknown-linux-gnu
+        run: cargo build --release --target x86_64-unknown-linux-gnu
       - name: Compress website
         run: tar -czf ./target/release/website website_x86_64_linux.tar.gz
       - name: Upload Asset
@@ -32,6 +31,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./website_x86_64_linux.tar.gz
+          asset_path: ./website/website_x86_64_linux.tar.gz
           asset_name: website_x86_64_linux.tar.gz
           asset_content_type: application/gzip
