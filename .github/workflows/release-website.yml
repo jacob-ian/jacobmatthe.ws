@@ -24,7 +24,7 @@ jobs:
       - name: Build website
         run: cargo build --release --target x86_64-unknown-linux-gnu
       - name: Compress website
-        run: tar -czf website/target/release/website website_x86_64_linux.tar.gz
+        run: tar -czf target/x86_64-unknown-linux-gnu/release/website website_x86_64_linux.tar.gz
       - name: Upload Asset
         uses: actions/upload-release-asset@v1
         env: 
