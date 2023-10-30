@@ -23,14 +23,13 @@ jobs:
           override: true
       - name: Build website
         run: cargo build --release --target x86_64-unknown-linux-gnu
-      - name: Compress website
-        run: tar -czf target/x86_64-unknown-linux-gnu/release/website website_x86_64_linux.tar.gz
       - name: Upload Asset
         uses: actions/upload-release-asset@v1
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./website/website_x86_64_linux.tar.gz
-          asset_name: website_x86_64_linux.tar.gz
-          asset_content_type: application/gzip
+          asset_path: ./website/target/x86_64-unknown-linux-gnu/release/website
+          asset_name: website_x86_64_linux
+          asset_name: website_${{ env.GITHUB_REF }}_x86_64_linux
+          asset_content_type: application/octet-stream

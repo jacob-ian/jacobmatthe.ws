@@ -23,14 +23,14 @@ jobs:
           override: true
       - name: Build backend
         run: cargo build --release --target x86_64-unknown-linux-gnu
-      - name: Compress backend
-        run: tar -czf target/x86_64-unknown-linux-gnu/release/backend backend_x86_64_linux.tar.gz
+        env:
+          SQLX_OFFLINE: true
       - name: Upload Asset
         uses: actions/upload-release-asset@v1
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./backend/backend_x86_64_linux.tar.gz
-          asset_name: backend_x86_64_linux.tar.gz
-          asset_content_type: application/gzip
+          asset_path: ./backend/target/x86_64-unknown-linux-gnu/release/backend
+          asset_name: backend_${{ env.GITHUB_REF }}_x86_64_linux
+          asset_content_type: application/octet-stream
